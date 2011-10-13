@@ -9,6 +9,7 @@ def main(global_config, **settings):
     """ This function returns a WSGI application.
     """
     config = Configurator(settings=settings, root_factory=Root)
+    config.include('pyramid_jinja2')
     config.add_view('triage.views.my_view',
                     context='triage:resources.Root',
                     renderer='triage:templates/mytemplate.pt')
