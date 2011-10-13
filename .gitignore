@@ -6,3 +6,22 @@ env
 *.EGG
 *.EGG-INFO
 
+.cache
+.filestores
+._*
+attachments
+error.log
+.Untitled-*
+.DS_Store
+keys
+nbproject
+tags
+tmtags
+config
+cscope.*
+Doxyfile
+ignore
+logs
+.buildpath
+.project
+.settings/
