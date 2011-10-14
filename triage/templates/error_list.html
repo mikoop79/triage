@@ -35,6 +35,8 @@
 
 		<thead>
 			<tr>
+				<th>Count</th>
+				<th>Type</th>
 				<th>Message</th>
 				<th>Tags</th>
 				<th>Time</th>
@@ -44,11 +46,16 @@
 		<tbody>
 			{% for error in errors %}
 				<tr>
-					<td><a href="/error/{{error._id}}">{{error.message}}</a></td>
+					<td>{{error.value.count|int}}</td>
+					<td><a href="/error/{{error.value._id}}">{{error.value.type}}</a></td>
+					<td><a href="/error/{{error.value._id}}">{{error.value.message}}</a></td>
 					<td>
-						<span class="label important">{{error.level}}</span>
+						<span class="label important">{{error.value.level}}</span>
 					</td>
-					<td data-timeago="{{error.timestamp}}"></td>
+					<td>
+						<span data-timeago="{{error.value.youngest}}"></span> -
+						<span data-timeago="{{error.value.oldest}}"></span>
+					</td>
 				</tr>
 			{% endfor %}
 		</tbody>
