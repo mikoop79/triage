@@ -2,104 +2,106 @@
 
 {% block content %}
 
-	<div id="error">
-	
-		<hgroup>
-			<h1>{{ error.type }}: {{ error.message }}</h1>
-			<h2>
-				{% if error.file %}
-					File "{{ error.file }}", 
-				{% endif %}
-				{% if error.line %}
-					line {{ error.line }}, 
-				{% endif %}
-				{% if error.stacktrace %} 
-					in {{ error.stacktrace[0].function }}
-				{% endif %}
-			</h2>
-		</hgroup>
+<div id="error">
 
-		<dl>
-			<dt>ID</dt>
-			<dd>{{ error._id }}</dd>
-			
-			<dt>Code</dt>
-			<dd>{{ error.code }}</dd>
-			
-			<dt>Hash</dt>
-			<dd>{{ error.hash }}</dd>
-			
-			<dt>Severity</dt>
-			<dd>{{ error.severity }}</dd>
-			
-			<dt>Language</dt>
-			<dd>{{ error.language }}</dd>
-			
-			<dt>Level</dt>
-			<dd>{{ error.level }}</dd>
-			
-			<dt>Timestamp</dt>
-			<dd><span data-timeago="{{ error.timestamp }}"></span></dd>
-			
-			<dt>Application</dt>
-			<dd>{{ error.application }}</dd>
-			
-			<dt>Host</dt>
-			<dd>{{ error.host }}</dd>
-			
-			<dt>Server Name</dt>
-			<dd>{{ error.context['Server Name'] }}</dd>
-			
-			<dt>User IP</dt>
-			<dd>{{ error.context['User IP'] }}</dd>
-			
-			<dt>Request</dt>
-			<dd>{{ error.context['Request'] }}</dd>
-			
-			<dt>Environment</dt>
-			<dd>{{ error.context['Environment'] }}</dd>
-			
-			<dt>Referer</dt>
-			<dd>{{ error.context['Referer'] }}</dd>
-			
-			<dt>User</dt>
-			<dd>{{ error.context['User'] }}</dd>
-			
-			<dt>User Agent</dt>
-			<dd>{{ error.context['User Agent'] }}</dd>
-		</dl>
+	<hgroup>
+		<h1>{{ error.type }}: {{ error.message }}</h1>
+		<h2>
+			{% if error.file %}
+				File "{{ error.file }}", 
+			{% endif %}
+			{% if error.line %}
+				line {{ error.line }}, 
+			{% endif %}
+			{% if error.stacktrace %} 
+				in {{ error.stacktrace[0].function }}
+			{% endif %}
+		</h2>
+	</hgroup>
 
-	</div>
+	<dl>
+		{% if error._id %}
+		<dt>ID</dt>
+		<dd>{{ error._id }}</dd>
+		{% endif %}
+		
+		{% if error.code %}
+		<dt>Code</dt>
+		<dd>{{ error.code }}</dd>
+		{% endif %}
+		
+		{% if error.hash %}
+		<dt>Hash</dt>
+		<dd>{{ error.hash }}</dd>
+		{% endif %}
+		
+		{% if error.severity %}
+		<dt>Severity</dt>
+		<dd>{{ error.severity }}</dd>
+		{% endif %}
+		
+		{% if error.language %}
+		<dt>Language</dt>
+		<dd>{{ error.language }}</dd>
+		{% endif %}
+		
+		{% if error.level %}
+		<dt>Level</dt>
+		<dd>{{ error.level }}</dd>
+		{% endif %}
+		
+		{% if error.timestamp %}
+		<dt>Timestamp</dt>
+		<dd><span data-timeago="{{ error.timestamp }}"></span></dd>
+		{% endif %}
+		
+		{% if error.application %}
+		<dt>Application</dt>
+		<dd>{{ error.application }}</dd>
+		{% endif %}
+		
+		{% if error.host %}
+		<dt>Host</dt>
+		<dd>{{ error.host }}</dd>
+		{% endif %}
+		
+		{% if error.context['Server Name'] %}
+		<dt>Server Name</dt>
+		<dd>{{ error.context['Server Name'] }}</dd>
+		{% endif %}
+		
+		{% if error.context['User IP'] %}
+		<dt>User IP</dt>
+		<dd>{{ error.context['User IP'] }}</dd>
+		{% endif %}
+		
+		{% if error.context['Request'] %}
+		<dt>Request</dt>
+		<dd>{{ error.context['Request'] }}</dd>
+		{% endif %}
+		
+		{% if error.context['Environment'] %}
+		<dt>Environment</dt>
+		<dd>{{ error.context['Environment'] }}</dd>
+		{% endif %}
+		
+		{% if error.context['Referer'] %}
+		<dt>Referer</dt>
+		<dd>{{ error.context['Referer'] }}</dd>
+		{% endif %}
+		
+		{% if error.context['User'] %}
+		<dt>User</dt>
+		<dd>{{ error.context['User'] }}</dd>
+		{% endif %}
+		
+		{% if error.context['User Agent'] %}
+		<dt>User Agent</dt>
+		<dd>{{ error.context['User Agent'] }}</dd>
+		{% endif %}
+	</dl>
 
-<table class="zebra-striped">
-
-	<thead>
-		<tr>
-			<th colspan="2">Error</th>
-		</tr>
-	</thead>
-
-{{ error }}
-
-	<tbody>
-		<tr>
-			<td><strong>Message:</strong> {{ error.message }}</td>
-			<td><strong>Occurred:</strong> <span data-timeago="{{ error.timestamp }}"></span></td>
-		</tr>
-
-		<tr>
-			<td><strong>Type:</strong> {{ error.type }}</td>
-			<td><strong>Severity:</strong> {{ error.severity }}</td>
-		</tr>
-
-		<tr>
-			<td><strong>File:</strong> {{ error.file }}</td>
-			<td><strong>Line:</strong> {{ error.line }}</td>
-		</tr>
-
-	</tbody>
-	
-</table>
+</div>
 
 <table class="zebra-striped accordion">
 
@@ -115,20 +117,10 @@
 			<tr>
 				<td>
 					<p>
-						<strong>File:</strong> {{ row.file }}:<strong>{{ row.line }}</strong>
+						<strong>In</strong> "{{ row.file }}"
+						<strong>at</strong> {% if row.class %}{{ row.class }}::{% endif %}{% if row.function %}{{ row.function }}{% endif %}
+						<strong>line</strong> {{ row.line }}
 					</p>
-					
-					{% if row.class %}
-					<p>
-						<strong>Class:</strong> {{ row.class }}
-					</p>
-					{% endif %}
-
-					{% if row.function %}
-					<p>
-						<strong>Function:</strong> {{ row.function }}
-					</p>
-					{% endif %}
 				</td>
 			</tr>
 		{% endfor %}

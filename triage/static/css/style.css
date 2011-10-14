@@ -60,7 +60,7 @@ table.accordion tbody {
 	border-collapse: separate;
 	border-radius: 4px 4px 4px 4px;
 	font-size: 13px;
-	margin: 20px 0 18px 0;
+	margin-bottom: 18px;
 	padding: 15px;
 }
 
