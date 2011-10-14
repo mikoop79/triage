@@ -44,7 +44,7 @@
 		<tbody>
 			{% for error in errors %}
 				<tr>
-					<td>{{error.message}}</td>
+					<td><a href="/error/{{error._id}}">{{error.message}}</a></td>
 					<td>
 						<span class="label important">{{error.level}}</span>
 					</td>
