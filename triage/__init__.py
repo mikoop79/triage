@@ -4,16 +4,16 @@ from pyramid.events import NewRequest
 import pymongo
 
 from triage.resources import Root
+from triage.routes import configure_routes
 
 def main(global_config, **settings):
     """ This function returns a WSGI application.
     """
     config = Configurator(settings=settings, root_factory=Root)
     config.include('pyramid_jinja2')
-    config.add_view('triage.views.my_view',
-                    context='triage:resources.Root',
-                    renderer='triage:templates/mytemplate.pt')
     config.add_static_view('static', 'triage:static')
+    configure_routes(config)
+    config.scan('triage.views')
     # MongoDB
     def add_mongo_db(event):
         settings = event.request.registry.settings
