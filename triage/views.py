@@ -13,4 +13,7 @@ def error_list(request):
 def error_view(request):
 	error_id = request.matchdict['id']
 	error = request.db['contest-errors'].find_one({'_id':ObjectId(error_id)})
-	return { 'error' : error }
+
+	other_errors = request.db['contest-errors'].find({ 'type': error.type, 'line': error.line, 'file': error.file })
+
+	return { 'error' : error , 'other_errors': other_errors }
