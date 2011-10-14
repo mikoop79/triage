@@ -1,0 +1,82 @@
+{% extends "layout/fluid.html" %}
+
+{% block content %}
+		
+<div id="navigation">
+	<ul class="tabs">
+		<li class="active"><a href="#">All</a></li>
+		<li><a href="#">Opened</a></li>
+		<li><a href="#">Closed</a></li>
+		<li><a href="#">404's</a></li>
+		<li data-dropdown="dropdown" class="dropdown pull-right">
+			<a class="dropdown-toggle" href="#">Group By</a>
+			<ul class="dropdown-menu">
+				<li><a href="#">Secondary link</a></li>
+				<li><a href="#">Something else here</a></li>
+				<li class="divider"></li>
+				<li><a href="#">Another link</a></li>
+			</ul>
+		</li>
+		<li data-dropdown="dropdown" class="dropdown pull-right">
+			<a class="dropdown-toggle" href="#">Sort By</a>
+			<ul class="dropdown-menu">
+				<li><a href="#">Secondary link</a></li>
+				<li><a href="#">Something else here</a></li>
+				<li class="divider"></li>
+				<li><a href="#">Another link</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div id="information">
+
+	<table class="zebra-striped">
+
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Message</th>
+				<th>Tags</th>
+				<th>Time</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr>
+				<td>500</td>
+				<td>Error 'ErrorException' with message 'You did it wrong'</td>
+				<td>
+					<span class="label">Default</span>
+					<span class="label success">New</span>
+					<span class="label warning">Warning</span>
+					<span class="label important">Important</span>
+					<span class="label notice">Notice</span>
+				</td>
+				<td data-timeago="1318488674.52"></td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>Error 'DatabaseException' with message 'You cannot select people'</td>
+				<td>
+					<span class="label">Default</span> 
+					<span class="label success">New</span> 
+					<span class="label important">Important</span> 
+					<span class="label important">Important</span> 
+					<span class="label important">Important</span> 
+				</td>
+				<td data-timeago="1318488674.52"></td>
+			</tr>
+			<tr>
+				<td>42</td>
+				<td>Error 'HumanException' with message 'You should change jobs'</td>
+				<td></td>
+				<td data-timeago="1318488674.52"></td>
+			</tr>
+		</tbody>
+
+	</table>
+
+</div>
+
+{% endblock %}

@@ -14,6 +14,7 @@ def main(global_config, **settings):
     config.add_static_view('static', 'triage:static')
     configure_routes(config)
     config.scan('triage.views')
+    config.add_renderer('.html', 'pyramid_jinja2.renderer_factory')
     # MongoDB
     def add_mongo_db(event):
         settings = event.request.registry.settings

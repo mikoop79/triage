@@ -1,0 +1,36 @@
+/*
+ * Personal Styles
+ */
+
+/*	Generic
+	------------------------------------------------------------ */
+
+body {
+	padding-top: 60px;
+}
+
+/*	Top Bar
+	------------------------------------------------------------ */
+
+.topbar .container {
+	width: 100%;
+	padding: 0 20px 0 20px;
+}
+
+/*	Container
+	------------------------------------------------------------ */
+
+.container-fluid > .content {
+	margin-left: 0;
+}
+
+/*	Navigation
+	------------------------------------------------------------ */
+
+#navigation .tabs {
+	float: none;
+}
+
+#navigation .tabs > li.pull-right {
+	float: right;
+}

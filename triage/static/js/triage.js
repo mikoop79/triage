@@ -1,0 +1,1 @@
+var Triage = { modules: {}, helpers: {} };
