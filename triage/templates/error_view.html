@@ -107,7 +107,8 @@
 
 	<thead>
 		<tr>
-			<th>Stacktrace</th>
+			<th>File</th>
+			<th>Method</th>
 		</tr>
 	</thead>
 
@@ -116,9 +117,10 @@
 		{% for row in error.stacktrace %}
 			<tr>
 				<td>
-					<strong>In</strong> "{{ row.file }}"
-					<strong>at</strong> {% if row.class %}{{ row.class }}::{% endif %}{% if row.function %}{{ row.function }}{% endif %}
-					<strong>line</strong> {{ row.line }}
+					{{ row.file }}:{{ row.line }}
+				</td>
+				<td>
+					{% if row.class %}{{ row.class }}::{% endif %}{% if row.function %}{{ row.function }}{% endif %}
 				</td>
 			</tr>
 		{% endfor %}

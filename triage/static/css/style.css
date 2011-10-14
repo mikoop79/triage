@@ -48,7 +48,7 @@ table.accordion th {
 }
 
 table.accordion tbody {
-	display: none;
+	/*display: none;*/
 }
 
 /*	Error
