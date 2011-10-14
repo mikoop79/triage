@@ -2,6 +2,70 @@
 
 {% block content %}
 
-{{error}}
+<table class="zebra-striped">
+
+	<thead>
+		<tr>
+			<th colspan="2">Error</th>
+		</tr>
+	</thead>
+
+{{ error }}
+
+	<tbody>
+		<tr>
+			<td><strong>Message:</strong> {{ error.message }}</td>
+			<td><strong>Occurred:</strong> <span data-timeago="{{ error.timestamp }}"></span></td>
+		</tr>
+
+		<tr>
+			<td><strong>Type:</strong> </td>
+			<td><strong>Severity:</strong> </td>
+		</tr>
+
+		<tr>
+			<td><strong>File:</strong> {{ error.file }}</td>
+			<td><strong>Line:</strong> {{ error.line }}</td>
+		</tr>
+
+	</tbody>
+	
+</table>
+
+<table class="zebra-striped accordion">
+
+	<thead>
+		<tr>
+			<th>Stacktrace</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		
+		{% for row in error.stacktrace %}
+			<tr>
+				<td>
+					<p>
+						<strong>File:</strong> {{ row.file }}:<strong>{{ row.line }}</strong>
+					</p>
+					
+					{% if row.class %}
+					<p>
+						<strong>Class:</strong> {{ row.class }}
+					</p>
+					{% endif %}
+
+					{% if row.function %}
+					<p>
+						<strong>Function:</strong> {{ row.function }}
+					</p>
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+
+	</tbody>
+	
+</table>
 
 {% endblock %}

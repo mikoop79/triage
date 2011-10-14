@@ -1,7 +1,7 @@
 var Triage = Triage || {};
 Triage.modules = Triage.modules = {};
 
-Triage.modules.timeago = (function($, app) {
+Triage.modules.timeAgo = (function($, app) {
 	"use strict";
 
 	var parse = function(self) {
@@ -41,4 +41,4 @@ Triage.modules.timeago = (function($, app) {
 	};
 });
 
-Triage.modules.timeago.autoRegister = true;
+Triage.modules.timeAgo.autoRegister = true;

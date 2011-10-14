@@ -39,3 +39,14 @@ body {
 	border-radius: 6px 0 6px 6px;
 	right: 0;
 }
+
+/*	Accordion
+	------------------------------------------------------------ */
+
+table.accordion th {
+	cursor: pointer;
+}
+
+table.accordion tbody {
+	display: none;
+}
