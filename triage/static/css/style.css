@@ -34,3 +34,8 @@ body {
 #navigation .tabs > li.pull-right {
 	float: right;
 }
+
+#navigation .tabs .dropdown-menu {
+	border-radius: 6px 0 6px 6px;
+	right: 0;
+}
