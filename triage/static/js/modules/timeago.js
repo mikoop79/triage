@@ -5,7 +5,7 @@ Triage.modules.timeago = (function($, app) {
 	"use strict";
 
 	var parse = function(self) {
-		var time = parseInt($(self).data('timeago'), 10) * 1000;
+		var time = parseFloat($(self).data('timeago')) * 1000;
 
 		var date = new Date(time),
 			diff = (((new Date()).getTime() - date.getTime()) / 1000),
