@@ -1,6 +1,3 @@
-var Triage = Triage || {};
-Triage.modules = Triage.modules = {};
-
 Triage.modules.tableAccordion = (function($, app) {
 	"use strict";
 

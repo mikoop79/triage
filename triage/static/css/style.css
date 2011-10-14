@@ -50,3 +50,52 @@ table.accordion th {
 table.accordion tbody {
 	display: none;
 }
+
+/*	Error
+	------------------------------------------------------------ */
+
+#error {
+	background: #ffffcb;
+	border: 1px solid #DDDDDD;
+	border-collapse: separate;
+	border-radius: 4px 4px 4px 4px;
+	font-size: 13px;
+	margin: 20px 0 18px 0;
+	padding: 15px;
+}
+
+#error hgroup {
+	margin-bottom: 10px;
+}
+
+#error h1 {
+	margin: 0;
+}
+
+#error h2 {
+	color: #6a655f;
+	margin: 0;
+	font-size: 120%;
+	line-height: 1;
+}
+
+#error dl {
+	margin: 0;	
+}
+
+#error dt,
+#error dd {
+	display: -moz-inline-stack;
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+}
+
+#error dt {
+	width: 15%;
+	text-align: right;
+}
+
+#error dd {
+	width: 75%;
+}

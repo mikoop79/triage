@@ -2,6 +2,75 @@
 
 {% block content %}
 
+	<div id="error">
+	
+		<hgroup>
+			<h1>{{ error.type }}: {{ error.message }}</h1>
+			<h2>
+				{% if error.file %}
+					File "{{ error.file }}", 
+				{% endif %}
+				{% if error.line %}
+					line {{ error.line }}, 
+				{% endif %}
+				{% if error.stacktrace %} 
+					in {{ error.stacktrace[0].function }}
+				{% endif %}
+			</h2>
+		</hgroup>
+
+		<dl>
+			<dt>ID</dt>
+			<dd>{{ error._id }}</dd>
+			
+			<dt>Code</dt>
+			<dd>{{ error.code }}</dd>
+			
+			<dt>Hash</dt>
+			<dd>{{ error.hash }}</dd>
+			
+			<dt>Severity</dt>
+			<dd>{{ error.severity }}</dd>
+			
+			<dt>Language</dt>
+			<dd>{{ error.language }}</dd>
+			
+			<dt>Level</dt>
+			<dd>{{ error.level }}</dd>
+			
+			<dt>Timestamp</dt>
+			<dd><span data-timeago="{{ error.timestamp }}"></span></dd>
+			
+			<dt>Application</dt>
+			<dd>{{ error.application }}</dd>
+			
+			<dt>Host</dt>
+			<dd>{{ error.host }}</dd>
+			
+			<dt>Server Name</dt>
+			<dd>{{ error.context['Server Name'] }}</dd>
+			
+			<dt>User IP</dt>
+			<dd>{{ error.context['User IP'] }}</dd>
+			
+			<dt>Request</dt>
+			<dd>{{ error.context['Request'] }}</dd>
+			
+			<dt>Environment</dt>
+			<dd>{{ error.context['Environment'] }}</dd>
+			
+			<dt>Referer</dt>
+			<dd>{{ error.context['Referer'] }}</dd>
+			
+			<dt>User</dt>
+			<dd>{{ error.context['User'] }}</dd>
+			
+			<dt>User Agent</dt>
+			<dd>{{ error.context['User Agent'] }}</dd>
+		</dl>
+
+	</div>
+
 <table class="zebra-striped">
 
 	<thead>
@@ -19,8 +88,8 @@
 		</tr>
 
 		<tr>
-			<td><strong>Type:</strong> </td>
-			<td><strong>Severity:</strong> </td>
+			<td><strong>Type:</strong> {{ error.type }}</td>
+			<td><strong>Severity:</strong> {{ error.severity }}</td>
 		</tr>
 
 		<tr>
