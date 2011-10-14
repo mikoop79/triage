@@ -102,7 +102,7 @@
 	</dl>
 
 </div>
-
+<h2>Stacktrace</h2>
 <table class="zebra-striped accordion">
 
 	<thead>
@@ -127,6 +127,25 @@
 
 	</tbody>
 	
+</table>
+
+<h2>Related Errors</h2>
+<table class="zebra-striped">
+	<thead>
+
+		<tr>
+			<th>Message</th>
+			<th>Time</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for e in other_errors %}
+			<tr>
+				<td><a href="/error/{{e._id}}">{{e.message}}</a></td>
+				<td data-timeago="{{ e.timestamp }}"></td>
+			</tr>
+		{% endfor %}
+	</tbody>
 </table>
 
 {% endblock %}
