@@ -37,23 +37,19 @@ body {
 	------------------------------------------------------------ */
 
 .container-fluid > .content {
-	margin-left: 0;
+	/*margin-left: 0;*/
 }
 
 /*	Navigation
 	------------------------------------------------------------ */
 
-#navigation .tabs {
-	float: none;
+#navigation {
+	margin: 0px 20px 0px 20px;
 }
 
-#navigation .tabs > li.pull-right {
-	float: right;
-}
-
-#navigation .tabs .dropdown-menu {
-	border-radius: 6px 0 6px 6px;
-	right: 0;
+#navigation .pills {
+	border-bottom: 1px solid #DDDDDD;
+	padding-bottom: 20px;
 }
 
 /*	Accordion
