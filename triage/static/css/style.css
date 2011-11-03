@@ -2,6 +2,22 @@
  * Personal Styles
  */
 
+/*	Fixes
+	------------------------------------------------------------ */
+
+/* @url http://nicolasgallagher.com/micro-clearfix-hack/ */
+.cf:before,
+.cf:after {
+    content:"";
+    display:table;
+}
+.cf:after {
+    clear:both;
+}
+.cf {
+    zoom:1;
+}
+
 /*	Generic
 	------------------------------------------------------------ */
 
