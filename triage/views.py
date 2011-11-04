@@ -97,7 +97,7 @@ def api_log(request):
 	try:
 		selected_project = available_projects[error['application']]	
 		request.db[selected_project['collection']].insert(error)
-	catch:
+	except:
 		return { 'success' : False }
 
 	return { 'success' : True }
