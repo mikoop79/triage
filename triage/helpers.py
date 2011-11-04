@@ -13,6 +13,8 @@ def get_errors(request, project, show):
 			file: this.file,
 			oldest: this.timestamp,
 			youngest: this.timestamp,
+			hidden: this.hidden,
+			seen: this.seen,
 			_id: this._id,
 			count:1 
 		});
@@ -32,7 +34,8 @@ def get_errors(request, project, show):
 				result.youngest = value.youngest;
 				result._id = value._id;
 			}
-
+			result.hidden = (result.hidden || value.hidden);
+			result.seen = (result.seen || value.seen)
 			result.count += value.count;
 		});
 		return result;
@@ -41,11 +44,11 @@ def get_errors(request, project, show):
 	if show == 'all':
 		where = None
 	elif show == 'hidden':
-		where = { 'hidden': 1 }
+		where = { 'value.hidden': 1 }
 	elif show == 'seen':
-		where = { 'seen': 1 }
+		where = { 'value.seen': 1 }
 	elif show == 'unseen':
-		where = { 'seen': 0 }
+		where = { 'value.seen': { '$ne': 1 }}
 
 	collection = project['collection']
 
@@ -57,4 +60,5 @@ def get_errors(request, project, show):
 
 
 def get_error_counts(request, project, show):
+
 	pass
