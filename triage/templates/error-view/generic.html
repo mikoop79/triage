@@ -18,7 +18,11 @@
 
 	{% block toolbar %}
 		<ul id="navigation" class="toolbar cf">
-			<li><a href="/error/{{ error._id }}/hide">Hide Error</a></li>
+			{% if error.hidden %}
+				<li><a href="/error/{{ error._id }}/show">Unhide Error</a></li>
+			{% else %}
+				<li><a href="/error/{{ error._id }}/hide">Hide Error</a></li>
+			{% endif %}
 			<li><a href="#">Mark as unseen</a></li>
 			<li><a href="#">Create Github issue</a></li>
 		</ul>

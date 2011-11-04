@@ -88,16 +88,33 @@ def error_view(request):
 @view_config(route_name='error_hide')
 def error_hide(request):
 	error_id = request.matchdict['id']
+	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
 	available_projects = request.registry.settings['projects']
 	selected_project = available_projects[error['application']]
 
-	error = request.db[selected_project['collection']+'-errors'].find_one({'_id': ObjectId(error_id)})
-
 	if error != None:
 		error['hidden'] = time()
-		request.db[selected_project['collection']+'-errors'].save(error)
+		request.db[selected_project['collection']].save(error)
 		
-		url = request.route_url('error_list', project=selected_project) 
+		url = request.route_url('error_list', project=selected_project['id']) 
+		return HTTPFound(location=url)
+
+	return HTTPNotFound()
+	
+	return { 'error' : error , 'other_errors': other_errors }
+
+@view_config(route_name='error_show')
+def error_show(request):
+	error_id = request.matchdict['id']
+	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
+	available_projects = request.registry.settings['projects']
+	selected_project = available_projects[error['application']]
+
+	if error != None:
+		error['hidden'] = None
+		request.db[selected_project['collection']].save(error)
+		
+		url = request.route_url('error_list', project=selected_project['id']) 
 		return HTTPFound(location=url)
 
 	return HTTPNotFound()
