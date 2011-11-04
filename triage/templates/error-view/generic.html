@@ -1,4 +1,18 @@
-{% extends "layout/fluid.html" %}
+{% extends "layout/fluid-sidebar.html" %}
+{% block navigation %}{% endblock %}
+
+{% block sidebar %}
+
+	<h2>Related Errors</h2>
+
+	<dl>
+		{% for e in other_errors %}
+			<dt><a href="/error/{{e._id}}">{{e.message}}</a></dt>
+			<dd data-timeago="{{ e.timestamp }}"></dd>
+		{% endfor %}
+	</dl>
+
+{% endblock %}
 
 {% block content %}
 
@@ -128,25 +142,6 @@
 
 	</tbody>
 	
-</table>
-
-<h2>Related Errors</h2>
-<table class="zebra-striped">
-	<thead>
-
-		<tr>
-			<th>Message</th>
-			<th>Time</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for e in other_errors %}
-			<tr>
-				<td><a href="/error/{{e._id}}">{{e.message}}</a></td>
-				<td data-timeago="{{ e.timestamp }}"></td>
-			</tr>
-		{% endfor %}
-	</tbody>
 </table>
 
 {% endblock %}

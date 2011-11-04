@@ -2,6 +2,22 @@
  * Personal Styles
  */
 
+/*	Fixes
+	------------------------------------------------------------ */
+
+/* @url http://nicolasgallagher.com/micro-clearfix-hack/ */
+.cf:before,
+.cf:after {
+    content:"";
+    display:table;
+}
+.cf:after {
+    clear:both;
+}
+.cf {
+    zoom:1;
+}
+
 /*	Generic
 	------------------------------------------------------------ */
 
@@ -24,20 +40,20 @@ body {
 	margin-left: 0;
 }
 
+.container-fluid.sidebar > .content {
+	margin-left: 240px;
+}
+
 /*	Navigation
 	------------------------------------------------------------ */
 
-#navigation .tabs {
-	float: none;
+#navigation {
+	margin: 0px 20px 0px 20px;
 }
 
-#navigation .tabs > li.pull-right {
-	float: right;
-}
-
-#navigation .tabs .dropdown-menu {
-	border-radius: 6px 0 6px 6px;
-	right: 0;
+#navigation .pills {
+	border-bottom: 1px solid #DDDDDD;
+	padding-bottom: 20px;
 }
 
 /*	Accordion

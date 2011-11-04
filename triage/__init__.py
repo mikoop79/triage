@@ -11,11 +11,14 @@ def main(global_config, **settings):
     """ This function returns a WSGI application.
     """
     config = Configurator(settings=settings, root_factory=Root)
+    #jinja2
     config.include('pyramid_jinja2')
-    config.add_static_view('static', 'triage:static')
-    configure_routes(config)
-    config.scan('triage.views')
     config.add_renderer('.html', 'pyramid_jinja2.renderer_factory')
+    #views
+    config.add_static_view('static', 'triage:static')
+    config.scan('triage.views')
+    #routes
+    configure_routes(config)
     # MongoDB
     def add_mongo_db(event):
         settings = event.request.registry.settings
