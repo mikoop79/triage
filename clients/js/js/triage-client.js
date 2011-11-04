@@ -42,8 +42,12 @@ var Triage = function() {
 				.add('level', name)
 				.add('line', line)
 				.add('type', 'exception')
+				.add('message', exception)
+								
+				//Context data
 				.add('url', url)
-				.add('message', exception);
+				.add('useragent', navigator.userAgent)
+				.add('cookies', document.cookie);
 
 			if(severity){
 				data.add('severity', severity)				
@@ -54,7 +58,7 @@ var Triage = function() {
 
 		getPortal: function(){
 			return this.portal;
-		}
+		}		
 	}
 
 	Triage.UrlData = function() {
