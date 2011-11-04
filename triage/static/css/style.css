@@ -56,15 +56,11 @@ body {
 	padding-bottom: 20px;
 }
 
-/*	Accordion
+/*	Container
 	------------------------------------------------------------ */
 
-table.accordion th {
-	cursor: pointer;
-}
-
-table.accordion tbody {
-	/*display: none;*/
+.sidebar input {
+	width: 170px;
 }
 
 /*	Error

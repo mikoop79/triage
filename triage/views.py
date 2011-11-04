@@ -36,12 +36,13 @@ def error_list(request):
 		errors = get_errors(request, selected_project)
 	except:
 		errors = []
-
+		
 	params = { 
 		'errors': errors,
 		'selected_project': selected_project,
 		'available_projects': available_projects
 	}
+
 	return render_to_response('error-list.html', params)
 
 

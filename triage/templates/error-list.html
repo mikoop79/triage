@@ -1,18 +1,28 @@
 {% extends "layout/fluid-sidebar.html" %}
 
+{% block sidebar %}
+
+	<form action="" method="POST">
+		<input type="text" name="search" placeholder="Search">
+	</form>
+
+	{{ super() }}
+
+{% endblock %}
+
 {% block content %}
 
 <div id="information">
 
-	<table class="zebra-striped">
+	<table class="bordered-table zebra-striped">
 
 		<thead>
 			<tr>
-				<th></th>
+				<!-- <th></th> -->
 				<th>Count</th>
 				<th>Type</th>
 				<th>Latest Message</th>
-				<th>Tags</th>
+				<!-- <th>Tags</th> -->
 				<th>Time (newest - oldest)</th>
 			</tr>
 		</thead>
@@ -20,18 +30,19 @@
 		<tbody>
 			{% for error in errors %}
 				<tr>
-					<td class="center"><input type="checkbox" name="error[]"></td>
+					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
 					<td>{{ error.value.count|int }}</td>
 					<td><a href="{{route_url('error_view', id=error.value._id)}}">{{ error.value.type }}</a></td>
 					<td><a href="{{route_url('error_view', id=error.value._id)}}">{{ error.value.message }}</a></td>
 					<td>
-						<!-- <span class="label important">{{ error.level }}</span> -->
+					<!-- <td>
+						<span class="label important">{{ error.level }}</span>
 						<span class="label">Default</span> 	
 						<span class="label success">New</span> 	
 						<span class="label warning">Warning</span> 	
 						<span class="label important">Important</span> 	
 						<span class="label notice">Notice</span>
-					</td>
+					</td> -->
 					<td>
 						<span data-timeago="{{ error.value.youngest }}"></span> -
 						<span data-timeago="{{ error.value.oldest }}"></span>
