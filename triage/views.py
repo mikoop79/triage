@@ -18,12 +18,15 @@ def add_route_url(event):
         return
     event['route_url'] = request.route_url
 
+
+
 @view_config(route_name='index')
 def index(request):
 	available_projects = request.registry.settings['projects']
 	selected_project = request.registry.settings['default_project']
 	url = request.route_url('error_list', project=selected_project) 
 	return HTTPFound(location=url)
+
 
 
 @view_config(route_name='error_list')
@@ -52,12 +55,12 @@ def error_list(request):
 	return render_to_response('error-list.html', params)
 
 
+
 @view_config(route_name='error_view')
 def error_view(request):
 	error_id = request.matchdict['id']
 	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
 	available_projects = request.registry.settings['projects']
-
 	selected_project = available_projects[error['application']]
 
 	other_errors = request.db['contest-errors'].find({
@@ -82,14 +85,20 @@ def error_view(request):
 
 	return { 'error' : error , 'other_errors': other_errors }
 
+
+
 @view_config(route_name='api_log', renderer='string')
 def api_log(request):
-	log.debug(request.str_GET)
+	available_projects = request.registry.settings['projects']
 
 	error = dict(request.str_GET)
 	error["timestamp"] = datetime.utcnow()
 
-	request.db[error['application']+'-errors'].insert(error)
-
+	try:
+		selected_project = available_projects[error['application']]	
+		request.db[selected_project['collection']].insert(error)
+	catch:
+		return { 'success' : False }
 
 	return { 'success' : True }
+

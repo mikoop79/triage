@@ -37,7 +37,6 @@ def get_errors(request, project, show):
 		});
 		return result;
 	}""")
-	collection = project['collection']+"-errors"
 
 	if show == 'all':
 		where = None
@@ -47,6 +46,8 @@ def get_errors(request, project, show):
 		where = { 'seen': 1 }
 	elif show == 'unseen':
 		where = { 'seen': 0 }
+
+	collection = project['collection']
 
 	return (request.db[collection]
 		.map_reduce(map, reduce, collection+'-aggregate')
