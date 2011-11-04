@@ -32,7 +32,11 @@ def error_list(request):
 	else:
 		return HTTPNotFound()
 
-	errors = get_errors(request, selected_project)
+	try:
+		errors = get_errors(request, selected_project)
+	except:
+		errors = []
+
 	params = { 
 		'errors': errors,
 		'selected_project': selected_project,
