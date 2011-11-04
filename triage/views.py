@@ -50,6 +50,9 @@ def error_list(request):
 def error_view(request):
 	error_id = request.matchdict['id']
 	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
+	available_projects = request.registry.settings['projects']
+
+	selected_project = available_projects[error['application']]
 
 	other_errors = request.db['contest-errors'].find({
 		'type': error['type'],
@@ -57,7 +60,12 @@ def error_view(request):
 		'file': error['file']
 	}).sort('timestamp', DESCENDING)
 
-	params = {'error': error, 'other_errors': other_errors}
+	params = {
+		'error': error,
+		'other_errors': other_errors,
+		'selected_project': selected_project,
+		'available_projects': available_projects		
+	}
 
 	try:
 		template = 'error-view/'+str(error['language']).lower()+'.html'
