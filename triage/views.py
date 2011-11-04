@@ -87,5 +87,7 @@ def api_log(request):
 	error = dict(request.str_GET)
 	error["timestamp"] = datetime.utcnow()
 
-	request.db['contest-errors'].insert(error)
+	request.db[error['application']+'-errors'].insert(error)
+
+
 	return { 'success' : True }
