@@ -1,4 +1,5 @@
 
 def configure_routes(config):
-	config.add_route('error_list', '/{project:.*}')	
+	config.add_route('index', '/')	
+	config.add_route('error_list', '/projects/{project}')	
 	config.add_route('error_view', 'error/{id}')

@@ -30,5 +30,6 @@ def main(global_config, **settings):
     conn = pymongo.Connection(db_uri)
     config.registry.settings['mongodb_conn'] = conn
     config.registry.settings['projects'] = app_settings.PROJECTS
+    config.registry.settings['default_project'] = app_settings.DEFAULT_PROJECT
     config.add_subscriber(add_mongo_db, NewRequest)
     return config.make_wsgi_app()

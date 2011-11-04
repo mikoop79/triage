@@ -15,9 +15,9 @@
 						<li data-dropdown="dropdown" class="dropdown pull-right">
 							<a class="dropdown-toggle" href="#project">Project</a>
 							<ul class="dropdown-menu">
-								<li><a href="#commerce">Contests</a></li>
-								<li><a href="#commerce">Commerce</a></li>
-								<li><a href="#frontend">Frontend</a></li>
+								{% for project in available_projects %}
+									<li><a href="{{project.key}}">{{project.title}}</a></li>
+								{% endfor %}
 							</ul>
 						</li>
 

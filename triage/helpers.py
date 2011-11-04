@@ -38,5 +38,9 @@ def get_errors(request, project):
 		return result;
 	}""")
 	collection = project['collection']+"-errors"
-	
-	return request.db[collection].map_reduce(map, reduce, collection+'-aggregate').find(fields={ 'value': 1 }).sort('value.youngest', DESCENDING)
+
+	return (request.db[collection]
+		.map_reduce(map, reduce, collection+'-aggregate')
+		.find(fields={ 'value': 1 })
+		.sort('value.youngest', DESCENDING)
+	)

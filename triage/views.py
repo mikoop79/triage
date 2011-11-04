@@ -3,6 +3,15 @@ from pyramid.renderers import render_to_response
 from pymongo.objectid import ObjectId
 from triage.helpers import get_errors
 from pymongo import DESCENDING
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+
+@view_config(route_name='index')
+def index(request):
+	available_projects = request.registry.settings['projects']
+	selected_project = request.registry.settings['default_project']
+	url = request.route_url('error_list', project=selected_project) 
+	return HTTPFound(location=url)
+
 
 @view_config(route_name='error_list')
 def error_list(request):
@@ -12,13 +21,12 @@ def error_list(request):
 	if selected_project_key in available_projects:
 		selected_project = available_projects[selected_project_key]
 	else:
-		selected_project = next(available_projects.itervalues()) #pick a default
+		return HTTPNotFound()
 
-	print selected_project
 	errors = get_errors(request, selected_project)
 	params = { 
 		'errors': errors,
-		'selected_project': selected_project,
+		'selected_project': selected_project_key,
 		'available_projects': available_projects
 	}
 	return render_to_response('error-list.html', params)
