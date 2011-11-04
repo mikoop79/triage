@@ -7,6 +7,7 @@ from triage.resources import Root
 from triage.routes import configure_routes
 from triage import settings as app_settings
 
+
 def main(global_config, **settings):
     """ This function returns a WSGI application.
     """
@@ -33,3 +34,5 @@ def main(global_config, **settings):
     config.registry.settings['default_project'] = app_settings.DEFAULT_PROJECT
     config.add_subscriber(add_mongo_db, NewRequest)
     return config.make_wsgi_app()
+
+

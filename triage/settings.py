@@ -1,7 +1,7 @@
 PROJECTS = {
-	'contests': { 'key': 'contests', 'title' : 'Contests', 'collection': 'contest' },
-	'commerce': { 'key': 'commerce', 'title' : 'Commerce', 'collection': 'commerce' },
-	'frontend': { 'key': 'frontend', 'title' : 'Frontend', 'collection': 'frontend' }
+	'contests': { 'id': 'contests', 'name' : 'Contests', 'collection': 'contest' },
+	'commerce': { 'id': 'commerce', 'name' : 'Commerce', 'collection': 'commerce' },
+	'frontend': { 'id': 'frontend', 'name' : 'Frontend', 'collection': 'frontend' }
 }
 
 DEFAULT_PROJECT = 'contests'

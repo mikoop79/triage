@@ -8,15 +8,17 @@
 			<div class="fill">
 				<div class="container">
 
-					<a href="/" class="brand">Triage</a>
+					<a href="{{route_url('index')}}" class="brand">Triage</a>
 					
 					<ul class="nav">
 
 						<li data-dropdown="dropdown" class="dropdown pull-right">
-							<a class="dropdown-toggle" href="#project">Project</a>
+							<a class="dropdown-toggle" href="">{{selected_project.name}}</a>
 							<ul class="dropdown-menu">
-								{% for project in available_projects %}
-									<li><a href="{{project.key}}">{{project.title}}</a></li>
+								{% for p in available_projects.itervalues() %}
+									<li {% if p.id == selected_project.id %}class="active"{% endif %}>
+										<a href="{{route_url('error_list', project=p.id)}}">{{p.name}}</a>
+									</li>
 								{% endfor %}
 							</ul>
 						</li>
