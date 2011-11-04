@@ -32,15 +32,10 @@ def index(request):
 
 @view_config(route_name='error_list')
 def error_list(request):
-	selected_project_key = request.matchdict['project']
 	available_projects = request.registry.settings['projects']
+	selected_project = get_selected_project(request)
 
 	show = request.params.get('show', 'unseen')
-
-	if selected_project_key in available_projects:
-		selected_project = available_projects[selected_project_key]
-	else:
-		return HTTPNotFound()
 
 	try:
 		errors = get_errors(request, selected_project, show)
@@ -61,18 +56,22 @@ def error_list(request):
 
 @view_config(route_name='error_view')
 def error_view(request):
-	error_id = request.matchdict['id']
-	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
 	available_projects = request.registry.settings['projects']
-	selected_project = available_projects[error['application']]
+	selected_project = get_selected_project(request)
+
+	error_id = request.matchdict['id']
+	error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
+
+	if not error:
+		return HTTPNotFound()
 
 	error['seen'] = True
 	request.db[selected_project['collection']].save(error)
 
 	other_errors = request.db['contest-errors'].find({
-		'type': error['type'],
-		'line': error['line'],
-		'file': error['file']
+		'type': error.get('type', None),
+		'line': error.get('line', None),
+		'file': error.get('file', None)
 	}).sort('timestamp', DESCENDING)
 
 	params = {
@@ -93,10 +92,11 @@ def error_view(request):
 
 @view_config(route_name='error_hide')
 def error_hide(request):
-	error_id = request.matchdict['id']
-	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
 	available_projects = request.registry.settings['projects']
-	selected_project = available_projects[error['application']]
+	selected_project = get_selected_project(request)
+
+	error_id = request.matchdict['id']
+	error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
 
 	if error != None:
 		error['hidden'] = True
@@ -113,10 +113,11 @@ def error_hide(request):
 
 @view_config(route_name='error_show')
 def error_show(request):
-	error_id = request.matchdict['id']
-	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
 	available_projects = request.registry.settings['projects']
-	selected_project = available_projects[error['application']]
+	selected_project = get_selected_project(request)
+		
+	error_id = request.matchdict['id']
+	error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
 
 	if error != None:
 		error['hidden'] = False
@@ -145,4 +146,15 @@ def api_log(request):
 		return { 'success' : False }
 
 	return { 'success' : True }
+
+
+
+def get_selected_project(request):
+	selected_project_key = request.matchdict['project']
+	available_projects = request.registry.settings['projects']
+
+	if selected_project_key in available_projects:
+		return available_projects[selected_project_key]
+	else:
+		raise HTTPNotFound()
 

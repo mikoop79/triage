@@ -91,6 +91,8 @@
 			<dd>{{ error.host }}</dd>
 			{% endif %}
 			
+			{% if error.context %}
+
 			{% if error.context['Server Name'] %}
 			<dt>Server Name</dt>
 			<dd>{{ error.context['Server Name'] }}</dd>
@@ -124,6 +126,8 @@
 			{% if error.context['User Agent'] %}
 			<dt>User Agent</dt>
 			<dd>{{ error.context['User Agent'] }}</dd>
+			{% endif %}
+
 			{% endif %}
 		</dl>
 
