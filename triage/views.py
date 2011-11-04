@@ -34,7 +34,7 @@ def error_list(request):
 	selected_project_key = request.matchdict['project']
 	available_projects = request.registry.settings['projects']
 
-	show = request.params.get('view', 'all')
+	show = request.params.get('show', 'all')
 
 	if selected_project_key in available_projects:
 		selected_project = available_projects[selected_project_key]
@@ -49,7 +49,8 @@ def error_list(request):
 	params = { 
 		'errors': errors,
 		'selected_project': selected_project,
-		'available_projects': available_projects
+		'available_projects': available_projects,
+		'show': show
 	}
 
 	return render_to_response('error-list.html', params)

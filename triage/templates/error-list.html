@@ -15,10 +15,10 @@
 
 	<div id="navigation" class="cf">
 		<ul class="pills">
-			<li class="active"><a href="?view=all">All (500)</a></li>
-			<li><a href="?view=unseen">Unseen (155)</a></li>
-			<li><a href="?view=seen">Seen (155)</a></li>
-			<li><a href="?view=hidden">Hidden (345)</a></li>
+			<li {% if show == 'all' %}class="active"{% endif %}><a href="?show=all">All (500)</a></li>
+			<li {% if show == 'unseen' %}class="active"{% endif %}><a href="?show=unseen">Unseen (155)</a></li>
+			<li {% if show == 'seen' %}class="active"{% endif %}><a href="?show=seen">Seen (155)</a></li>
+			<li {% if show == 'hidden' %}class="active"{% endif %}><a href="?show=hidden">Hidden (345)</a></li>
 		</ul>
 	</div>
 
