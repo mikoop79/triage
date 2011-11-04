@@ -1,5 +1,5 @@
 from pyramid.view import view_config
-from pyramid.renderers import render_to_response
+from pyramid.renderers import render_to_response, get_renderer
 from pymongo.objectid import ObjectId
 from triage.helpers import get_errors
 from pymongo import DESCENDING
@@ -24,4 +24,10 @@ def error_view(request):
 	}).sort('timestamp', DESCENDING)
 
 	params = {'error': error, 'other_errors': other_errors}
-	return render_to_response('error-view.html', params)
+
+	try:
+		template = 'error-view/'+str(error['language']).lower()+'.html'
+		return render_to_response(template, params)
+	except:
+		template = 'error-view/generic.html'
+		return render_to_response(template, params)

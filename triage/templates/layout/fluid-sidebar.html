@@ -7,20 +7,22 @@
 	<div class="sidebar">
 		<div class="well">
 
-			<h5>Tags</h5>
-			<ul>
-				<li><a href="#">High</a></li>
-				<li><a href="#">Medium</a></li>
-				<li><a href="#">Low</a></li>
-			</ul>
+			{% block sidebar %}
+				<h5>Tags</h5>
+				<ul>
+					<li><a href="#">High</a></li>
+					<li><a href="#">Medium</a></li>
+					<li><a href="#">Low</a></li>
+				</ul>
 
-			<h5>Time</h5>
-			<ul>
-				<li><a href="#">1 week ago</a></li>
-				<li><a href="#">2 weeks ago</a></li>
-				<li><a href="#">1 month ago</a></li>
-				<li><a href="#">1 year ago</a></li>
-			</ul>
+				<h5>Time</h5>
+				<ul>
+					<li><a href="#">1 week ago</a></li>
+					<li><a href="#">2 weeks ago</a></li>
+					<li><a href="#">1 month ago</a></li>
+					<li><a href="#">1 year ago</a></li>
+				</ul>
+			{% endblock %}
 
 		</div>
 	</div>
