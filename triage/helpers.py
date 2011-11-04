@@ -1,7 +1,7 @@
 from pymongo.code import Code
 from pymongo import DESCENDING
 
-def get_errors(request, project):
+def get_errors(request, project, show):
 
 	map = Code("""
 
@@ -39,8 +39,21 @@ def get_errors(request, project):
 	}""")
 	collection = project['collection']+"-errors"
 
+	if show == 'all':
+		where = None
+	elif show == 'hidden':
+		where = { 'hidden': 1 }
+	elif show == 'seen':
+		where = { 'seen': 1 }
+	elif show == 'unseen':
+		where = { 'seen': 0 }
+
 	return (request.db[collection]
 		.map_reduce(map, reduce, collection+'-aggregate')
-		.find(fields={ 'value': 1 })
+		.find(where)
 		.sort('value.youngest', DESCENDING)
 	)
+
+
+def get_error_counts(request, project, show):
+	pass

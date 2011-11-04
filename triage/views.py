@@ -31,13 +31,15 @@ def error_list(request):
 	selected_project_key = request.matchdict['project']
 	available_projects = request.registry.settings['projects']
 
+	show = request.params.get('view', 'all')
+
 	if selected_project_key in available_projects:
 		selected_project = available_projects[selected_project_key]
 	else:
 		return HTTPNotFound()
 
 	try:
-		errors = get_errors(request, selected_project)
+		errors = get_errors(request, selected_project, show)
 	except:
 		errors = []
 		
