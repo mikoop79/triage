@@ -5,7 +5,7 @@ from pymongo.objectid import ObjectId
 from triage.helpers import get_errors
 from pymongo import DESCENDING
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from datetime import datetime
+import time
 
 import logging
 log = logging.getLogger(__name__)
@@ -128,7 +128,7 @@ def api_log(request):
 	available_projects = request.registry.settings['projects']
 
 	error = dict(request.str_GET)
-	error["timestamp"] = datetime.utcnow()
+	error["timestamp"] = time.time()
 
 	try:
 		selected_project = available_projects[error['application']]	
