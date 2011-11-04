@@ -25,7 +25,12 @@
 					<td><a href="{{route_url('error_view', id=error.value._id)}}">{{ error.value.type }}</a></td>
 					<td><a href="{{route_url('error_view', id=error.value._id)}}">{{ error.value.message }}</a></td>
 					<td>
-						<span class="label important">{{ error.level }}</span>
+						<!-- <span class="label important">{{ error.level }}</span> -->
+						<span class="label">Default</span> 	
+						<span class="label success">New</span> 	
+						<span class="label warning">Warning</span> 	
+						<span class="label important">Important</span> 	
+						<span class="label notice">Notice</span>
 					</td>
 					<td>
 						<span data-timeago="{{ error.value.youngest }}"></span> -
