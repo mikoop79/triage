@@ -4,6 +4,10 @@ from pymongo.objectid import ObjectId
 from triage.helpers import get_errors
 from pymongo import DESCENDING
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from datetime import datetime
+
+import logging
+log = logging.getLogger(__name__)
 
 import pyramid.threadlocal as threadlocal
 from pyramid.events import BeforeRender, subscriber
@@ -78,5 +82,10 @@ def error_view(request):
 
 @view_config(route_name='api_log', renderer='string')
 def api_log(request):
+	log.debug(request.str_GET)
 
+	error = dict(request.str_GET)
+	error["timestamp"] = datetime.utcnow()
+
+	request.db['contest-errors'].insert(error)
 	return { 'success' : True }
