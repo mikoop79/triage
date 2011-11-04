@@ -5,9 +5,21 @@ from pymongo import DESCENDING
 
 @view_config(route_name='error_list', renderer='triage:templates/error_list.html')
 def error_list(request):
+	selected_project_key = request.matchdict['project']
+	available_projects = request.registry.settings['projects']
 
-	errors = get_errors(request, 'contest-errors')
-	return {'errors': errors}
+	if selected_project_key in available_projects:
+		selected_project = available_projects[selected_project_key]
+	else:
+		selected_project = next(available_projects.itervalues()) #pick a default
+
+	print selected_project
+	errors = get_errors(request, selected_project)
+	return { 
+		'errors': errors,
+		'selected_project': selected_project,
+		'available_projects': available_projects
+	}
 
 
 @view_config(route_name='error_view', renderer='triage:templates/error_view.html')

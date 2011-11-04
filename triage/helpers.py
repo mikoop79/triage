@@ -1,7 +1,7 @@
 from pymongo.code import Code
 from pymongo import DESCENDING
 
-def get_errors(request, collection):
+def get_errors(request, project):
 
 	map = Code("""
 
@@ -37,4 +37,6 @@ def get_errors(request, collection):
 		});
 		return result;
 	}""")
-	return request.db[collection].map_reduce(map, reduce, collection+'aggregate').find(fields={ 'value': 1 }).sort('value.youngest', DESCENDING)
+	collection = project['collection']+"-errors"
+	
+	return request.db[collection].map_reduce(map, reduce, collection+'-aggregate').find(fields={ 'value': 1 }).sort('value.youngest', DESCENDING)
