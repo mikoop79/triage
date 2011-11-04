@@ -40,8 +40,13 @@ body {
 	margin-left: 0;
 }
 
+.container-fluid > .sidebar {
+	right: 20px;
+	left: inherit;	
+}
+
 .container-fluid.sidebar > .content {
-	margin-left: 240px;
+	margin-right: 240px;
 }
 
 /*	Navigation
