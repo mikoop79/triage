@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>JS Client for Triage</title>
+		<script src="http://code.jquery.com/jquery-1.7.min.js" type="text/javascript"></script>
+		<script src="js/triage-client.js?2@" type="text/javascript"></script>
+		<script type="text/javascript">
+			//<![CDATA[
+				"use strict";
+
+				var demo = function(){
+					Triage.init('127.0.0.1:6543', 'contest');					
+					
+					var $result = $('#result');
+
+					$("#logerror").click(function(){
+						Triage.logError('test', 'http://google.com', 2);
+					});
+
+					$("#logmsg").click(function(){
+						Triage.logMsg('test', 'http://google.com', 2);
+					});
+
+					$("#createerror").click(function(){
+						throw Triage.Exception('test', 'BAD');
+					});
+
+				}
+
+				$(function(){
+					demo();
+				});
+			//]]>
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<div id="result">
+				
+			</div><!-- /result -->
+			<div id="demo">
+				<a href="javascript:void(0);" title="log error" id="logerror">Log error</a>	|
+				<a href="javascript:void(0);" title="log msg" id="logmsg">Log message</a>	|
+				<a href="javascript:void(0);" title="generate error" id="createerror">Create error</a>	|
+			</div>
+		</div><!-- /container -->
+	</body>
+</html>
