@@ -4,7 +4,6 @@ from pymongo.objectid import ObjectId
 from triage.helpers import get_errors
 from pymongo import DESCENDING
 
-<<<<<<< HEAD
 @view_config(route_name='error_list')
 def error_list(request):
 	selected_project_key = request.matchdict['project']
