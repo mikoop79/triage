@@ -23,9 +23,17 @@
 					});
 
 					$("#createerror").click(function(){
-						throw Triage.Exception('test', 'BAD');
+						throw 'Errro test message';
 					});
 
+					$("#customerrors").click(function(){
+						try {
+							throw 'custom error';
+						}catch(e){
+							Triage.logError('Custom error', document.URL, null, 'BAD');
+						}
+						Triage.log;
+					});
 				}
 
 				$(function(){
@@ -42,7 +50,8 @@
 			<div id="demo">
 				<a href="javascript:void(0);" title="log error" id="logerror">Log error</a>	|
 				<a href="javascript:void(0);" title="log msg" id="logmsg">Log message</a>	|
-				<a href="javascript:void(0);" title="generate error" id="createerror">Create error</a>	|
+				<a href="javascript:void(0);" title="create error" id="createerror">Create error</a>	|
+				<a href="javascript:void(0);" title="custom error" id="customerrors">Catch Custom errors</a>	|
 			</div>
 		</div><!-- /container -->
 	</body>

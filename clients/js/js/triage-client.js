@@ -19,15 +19,19 @@ var Triage = function() {
 			};
 		},
 
-		logError: function(exception, url, line) {
-			this.getPortal().request(this._urlData('error', exception, url, line));
+		flush: function(){
+			this.getPortal().executeRequest();
+		},
+
+		logError: function(msg, url, line, severity) {
+			this.getPortal().request(this._urlData('error', msg, url, line, severity));
 		},
 
 		logMsg: function(msg, url, line) {
 			this.getPortal().request(this._urlData('msg', msg, url, line));
 		},
 
-		_urlData: function(name, exception, url, line) {
+		_urlData: function(name, exception, url, line, severity) {
 			var data = new Triage.UrlData();
 			data
 				.add('application', this.application)
@@ -38,23 +42,20 @@ var Triage = function() {
 				.add('type', 'exception')
 				.add('message', exception);
 
+			if(severity){
+				data.add('severity', severity)				
+			}
+
 			return data.output();
 		},
 
 		getPortal: function(){
-			if(this.portal === null){
+			if(!this.portal){
 				this.portal = new Triage.Portal(this.host);
 			}
 
 			return this.portal;
 		}
-	}
-
-	Triage.Exception = function(msg, severity){
-		this.msg = msg;
-		this.severity = severity;
-
-		return "Triage.Exception: { 'msg': "+msg+", 'severity': "+severity+" }";
 	}
 
 	Triage.UrlData = function() {
@@ -74,12 +75,21 @@ var Triage = function() {
 	}
 
 	Triage.Portal = function(host){
-		var iframe = document.createElement('iframe');
+		var queue = [];
+		var iframe = null;
+		var self = this;
+
+		/** Setup iframe **/
+		iframe = document.createElement('iframe');
 		iframe.style.width   = '1px';
 		iframe.style.height  = '1px';
 		iframe.style.display = 'none';
 		
-		this.portal = iframe;
+		iframe.onload = function() {
+			if(queue.length > 0){
+				self.executeRequest();
+			}
+		}
 
 		if (document.body) {
 			document.body.appendChild(iframe);
@@ -92,12 +102,22 @@ var Triage = function() {
 		/** public functions **/
 
 		this.request = function(data){
-			iframe.src = _getUrl(data);
+			queue.push(_getUrl(data));
+
+			if (queue.length === 1) {
+				this.executeRequest();
+			}
 		}
+
+		this.executeRequest = function() {
+			iframe.src = queue[0];
+			queue.shift();
+		}
+
 
 		/** private functions **/
 
-		function _onWindowLoad(callback){
+		function _onWindowLoad(callback) {
 			var previousOnload = window.onload;
 
 			if(typeof window.onload != 'function'){
@@ -115,8 +135,9 @@ var Triage = function() {
 		}
 
 		function _getUrl(data){
-			return 'http://'+host + '/api/log?'+data;
+			return 'http://'+host + '/api/log'+data;
 		}
+
 
 		return this;
 	}
