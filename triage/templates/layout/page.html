@@ -2,39 +2,47 @@
 
 {% block body %}
 
-<header class="topbar">
-	<div class="fill">
-		<div class="container">
+	{% block topbar %}
 
-			<a href="/" class="brand">Triage</a>
-			
-			<ul class="nav">
+		<header class="topbar">
+			<div class="fill">
+				<div class="container">
 
-				<li data-dropdown="dropdown" class="dropdown pull-right">
-					<a class="dropdown-toggle" href="#project">Project</a>
-					<ul class="dropdown-menu">
-						<li><a href="#commerce">Contests</a></li>
-						<li><a href="#commerce">Commerce</a></li>
-						<li><a href="#frontend">Frontend</a></li>
+					<a href="/" class="brand">Triage</a>
+					
+					<ul class="nav">
+
+						<li data-dropdown="dropdown" class="dropdown pull-right">
+							<a class="dropdown-toggle" href="#project">Project</a>
+							<ul class="dropdown-menu">
+								<li><a href="#commerce">Contests</a></li>
+								<li><a href="#commerce">Commerce</a></li>
+								<li><a href="#frontend">Frontend</a></li>
+							</ul>
+						</li>
+
+						<li><a href="#frontend">Configure</a></li>
+
 					</ul>
-				</li>
 
-				<li><a href="#frontend">Configure</a></li>
+				</div>
+			</div>
+		</header>
 
+	{% endblock %}
+
+	{% block navigation %}
+
+		<div id="navigation" class="cf">
+			<ul class="pills">
+				<li class="active"><a href="#">All (500)</a></li>
+				<li><a href="#">Opened (155)</a></li>
+				<li><a href="#">Closed (345)</a></li>
+				<li><a href="#">404's (20)</a></li>
 			</ul>
-
 		</div>
-	</div>
-</header>
 
-<div id="navigation" class="cf">
-	<ul class="pills">
-		<li class="active"><a href="#">All (500)</a></li>
-		<li><a href="#">Opened (155)</a></li>
-		<li><a href="#">Closed (345)</a></li>
-		<li><a href="#">404's (20)</a></li>
-	</ul>
-</div>
+	{% endblock %}
 
 {% block container %}{% endblock %}
 

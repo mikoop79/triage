@@ -37,7 +37,11 @@ body {
 	------------------------------------------------------------ */
 
 .container-fluid > .content {
-	/*margin-left: 0;*/
+	margin-left: 0;
+}
+
+.container-fluid.sidebar > .content {
+	margin-left: 240px;
 }
 
 /*	Navigation

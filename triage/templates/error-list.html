@@ -1,4 +1,4 @@
-{% extends "layout/fluid.html" %}
+{% extends "layout/fluid-sidebar.html" %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
 				<th>Count</th>
 				<th>Type</th>
 				<th>Latest Message</th>
-				<!-- <th>Tags</th> -->
+				<th>Tags</th>
 				<th>Time (newest - oldest)</th>
 			</tr>
 		</thead>
@@ -24,9 +24,9 @@
 					<td>{{ error.value.count|int }}</td>
 					<td><a href="/error/{{ error.value._id }}">{{ error.value.type }}</a></td>
 					<td><a href="/error/{{ error.value._id }}">{{ error.value.message }}</a></td>
-					<!-- <td>
-						<span class="label important">{{ error.value.level }}</span>
-					</td> -->
+					<td>
+						<span class="label important">{{ error.level }}</span>
+					</td>
 					<td>
 						<span data-timeago="{{ error.value.youngest }}"></span> -
 						<span data-timeago="{{ error.value.oldest }}"></span>

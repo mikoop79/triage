@@ -1,24 +1,27 @@
 from pyramid.view import view_config
+from pyramid.renderers import render_to_response
 from pymongo.objectid import ObjectId
 from triage.helpers import get_errors
 from pymongo import DESCENDING
 
-@view_config(route_name='error_list', renderer='triage:templates/error_list.html')
+
+@view_config(route_name='error_list')
 def error_list(request):
-
 	errors = get_errors(request, 'contest-errors')
-	return {'errors': errors}
+	params = {'errors': errors}
+	return render_to_response('error-list.html', params)
 
 
-@view_config(route_name='error_view', renderer='triage:templates/error_view.html')
+@view_config(route_name='error_view')
 def error_view(request):
 	error_id = request.matchdict['id']
-	error = request.db['contest-errors'].find_one({'_id':ObjectId(error_id)})
+	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
 
-	other_errors = request.db['contest-errors'].find({ 
+	other_errors = request.db['contest-errors'].find({
 		'type': error['type'],
 		'line': error['line'],
-		'file': error['file'] 
+		'file': error['file']
 	}).sort('timestamp', DESCENDING)
 
-	return { 'error' : error , 'other_errors': other_errors }
+	params = {'error': error, 'other_errors': other_errors}
+	return render_to_response('error-view.html', params)
