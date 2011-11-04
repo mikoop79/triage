@@ -93,7 +93,7 @@ def error_hide(request):
 	selected_project = available_projects[error['application']]
 
 	if error != None:
-		error['hidden'] = time()
+		error['hidden'] = True
 		request.db[selected_project['collection']].save(error)
 		
 		url = request.route_url('error_list', project=selected_project['id']) 
@@ -111,7 +111,7 @@ def error_show(request):
 	selected_project = available_projects[error['application']]
 
 	if error != None:
-		error['hidden'] = None
+		error['hidden'] = False
 		request.db[selected_project['collection']].save(error)
 		
 		url = request.route_url('error_list', project=selected_project['id']) 
