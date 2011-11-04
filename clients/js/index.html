@@ -13,13 +13,11 @@
 					var $result = $('#result');
 
 					$("#logerror").click(function(){
-						var lineNumber = new Error().lineNumber;
-						Triage.logError('test', 'http://google.com', lineNumber);
+						Triage.logError('test', document.URL, new Error().lineNumber);
 					});
 
 					$("#logmsg").click(function(){
-						var lineNumber = new Error().lineNumber;
-						Triage.logMsg('test', 'http://google.com', lineNumber);
+						Triage.logMsg('test', document.URL, new Error().lineNumber);
 					});
 
 					$("#createerror").click(function(){
