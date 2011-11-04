@@ -50,6 +50,11 @@ def get_errors(request, project, show):
 	)
 
 
+def get_error_count(request, project, show):
+	collection = project['collection']+'-aggregate'
+	return request.db[collection].find(get_filter(show)).count()
+
+
 def get_filter(show):
 	if show == 'all':
 		return None
@@ -60,7 +65,3 @@ def get_filter(show):
 	elif show == 'unseen':
 		return { 'value.seen': { '$ne': True }, 'value.hidden': { '$ne': True }}
 
-
-def get_error_count(request, project, show):
-	collection = project['collection']+'-aggregate'
-	return request.db[collection].find(get_filter(show)).count()
