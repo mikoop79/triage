@@ -1,3 +1,4 @@
+from time import time
 from pyramid.view import view_config
 from pyramid.renderers import render_to_response
 from pymongo.objectid import ObjectId
@@ -84,6 +85,23 @@ def error_view(request):
 		template = 'error-view/generic.html'
 		return render_to_response(template, params)
 
+@view_config(route_name='error_hide')
+def error_hide(request):
+	error_id = request.matchdict['id']
+	available_projects = request.registry.settings['projects']
+	selected_project = available_projects[error['application']]
+
+	error = request.db[selected_project['collection']+'-errors'].find_one({'_id': ObjectId(error_id)})
+
+	if error != None:
+		error['hidden'] = time()
+		request.db[selected_project['collection']+'-errors'].save(error)
+		
+		url = request.route_url('error_list', project=selected_project) 
+		return HTTPFound(location=url)
+
+	return HTTPNotFound()
+	
 	return { 'error' : error , 'other_errors': other_errors }
 
 

@@ -61,6 +61,25 @@ body {
 	padding-bottom: 20px;
 }
 
+#navigation.toolbar {
+	margin: 0 0 20px 0;
+}
+
+#navigation.toolbar > li {
+	float: left;
+	list-style-type: none;
+	margin-right: 10px;
+}
+
+#navigation.toolbar > li a {
+	display: block;
+	line-height: 40px;
+	height: 40px;
+	padding: 0 20px 0 20px;
+	border: 1px solid #DDDDDD;
+	
+}
+
 /*	Container
 	------------------------------------------------------------ */
 
