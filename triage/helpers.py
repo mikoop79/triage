@@ -54,11 +54,11 @@ def get_filter(show):
 	if show == 'all':
 		return None
 	elif show == 'hidden':
-		return { 'value.hidden': 1 }
+		return { 'value.hidden': True }
 	elif show == 'seen':
-		return { 'value.seen': 1 }
+		return { 'value.seen': True, 'value.hidden': { '$ne': True }}
 	elif show == 'unseen':
-		return { 'value.seen': { '$ne': 1 }}
+		return { 'value.seen': { '$ne': True }, 'value.hidden': { '$ne': True }}
 
 
 def get_error_count(request, project, show):
