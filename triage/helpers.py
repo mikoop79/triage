@@ -41,24 +41,26 @@ def get_errors(request, project, show):
 		return result;
 	}""")
 
-	if show == 'all':
-		where = None
-	elif show == 'hidden':
-		where = { 'value.hidden': 1 }
-	elif show == 'seen':
-		where = { 'value.seen': 1 }
-	elif show == 'unseen':
-		where = { 'value.seen': { '$ne': 1 }}
-
 	collection = project['collection']
 
 	return (request.db[collection]
 		.map_reduce(map, reduce, collection+'-aggregate')
-		.find(where)
+		.find(get_filter(show))
 		.sort('value.youngest', DESCENDING)
 	)
 
 
-def get_error_counts(request, project, show):
+def get_filter(show):
+	if show == 'all':
+		return None
+	elif show == 'hidden':
+		return { 'value.hidden': 1 }
+	elif show == 'seen':
+		return { 'value.seen': 1 }
+	elif show == 'unseen':
+		return { 'value.seen': { '$ne': 1 }}
 
-	pass
+
+def get_error_count(request, project, show):
+	collection = project['collection']+'-aggregate'
+	return request.db[collection].find(get_filter(show)).count()

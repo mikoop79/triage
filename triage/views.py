@@ -2,7 +2,7 @@ from time import time
 from pyramid.view import view_config
 from pyramid.renderers import render_to_response
 from pymongo.objectid import ObjectId
-from triage.helpers import get_errors
+from triage.helpers import get_errors, get_error_count
 from pymongo import DESCENDING
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 import time
@@ -35,7 +35,7 @@ def error_list(request):
 	selected_project_key = request.matchdict['project']
 	available_projects = request.registry.settings['projects']
 
-	show = request.params.get('show', 'all')
+	show = request.params.get('show', 'unseen')
 
 	if selected_project_key in available_projects:
 		selected_project = available_projects[selected_project_key]
@@ -51,7 +51,8 @@ def error_list(request):
 		'errors': errors,
 		'selected_project': selected_project,
 		'available_projects': available_projects,
-		'show': show
+		'show': show,
+		'get_error_count': lambda x: get_error_count(request, selected_project, x)
 	}
 
 	return render_to_response('error-list.html', params)
@@ -64,6 +65,9 @@ def error_view(request):
 	error = request.db['contest-errors'].find_one({'_id': ObjectId(error_id)})
 	available_projects = request.registry.settings['projects']
 	selected_project = available_projects[error['application']]
+
+	error['seen'] = True
+	request.db[selected_project['collection']].save(error)
 
 	other_errors = request.db['contest-errors'].find({
 		'type': error['type'],
@@ -85,6 +89,8 @@ def error_view(request):
 		template = 'error-view/generic.html'
 		return render_to_response(template, params)
 
+
+
 @view_config(route_name='error_hide')
 def error_hide(request):
 	error_id = request.matchdict['id']
@@ -102,6 +108,8 @@ def error_hide(request):
 	return HTTPNotFound()
 	
 	return { 'error' : error , 'other_errors': other_errors }
+
+
 
 @view_config(route_name='error_show')
 def error_show(request):
