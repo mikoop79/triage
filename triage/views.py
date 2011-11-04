@@ -73,3 +73,10 @@ def error_view(request):
 	except:
 		template = 'error-view/generic.html'
 		return render_to_response(template, params)
+
+	return { 'error' : error , 'other_errors': other_errors }
+
+@view_config(route_name='api_log', renderer='string')
+def api_log(request):
+
+	return { 'success' : True }
