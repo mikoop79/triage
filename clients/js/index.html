@@ -9,17 +9,17 @@
 			//<![CDATA[
 				"use strict";
 
-				var demo = function(){
-					Triage.init('127.0.0.1:6543', 'contest');					
-					
+				var demo = function(){		
 					var $result = $('#result');
 
 					$("#logerror").click(function(){
-						Triage.logError('test', 'http://google.com', 2);
+						var lineNumber = new Error().lineNumber;
+						Triage.logError('test', 'http://google.com', lineNumber);
 					});
 
 					$("#logmsg").click(function(){
-						Triage.logMsg('test', 'http://google.com', 2);
+						var lineNumber = new Error().lineNumber;
+						Triage.logMsg('test', 'http://google.com', lineNumber);
 					});
 
 					$("#createerror").click(function(){
@@ -28,16 +28,19 @@
 
 					$("#customerrors").click(function(){
 						try {
-							throw 'custom error';
+							throw Error('custom error');
 						}catch(e){
-							Triage.logError('Custom error', document.URL, null, 'BAD');
+							Triage.logError('Custom error', document.URL, e.lineNumber, 'BAD');
 						}
+
 						Triage.log;
 					});
 				}
 
 				$(function(){
 					demo();
+
+					test[s']
 				});
 			//]]>
 		</script>

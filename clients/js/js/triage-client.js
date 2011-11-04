@@ -13,6 +13,8 @@ var Triage = function() {
 			this.application = application;
 
 			var self = this;
+			
+			this.portal = new Triage.Portal(this.host);
 
 			window.onerror = function(msg, url, line) {
 				self.logError(msg, url, line);
@@ -40,6 +42,7 @@ var Triage = function() {
 				.add('level', name)
 				.add('line', line)
 				.add('type', 'exception')
+				.add('url', url)
 				.add('message', exception);
 
 			if(severity){
@@ -50,10 +53,6 @@ var Triage = function() {
 		},
 
 		getPortal: function(){
-			if(!this.portal){
-				this.portal = new Triage.Portal(this.host);
-			}
-
 			return this.portal;
 		}
 	}
@@ -114,7 +113,6 @@ var Triage = function() {
 			queue.shift();
 		}
 
-
 		/** private functions **/
 
 		function _onWindowLoad(callback) {
@@ -145,4 +143,5 @@ var Triage = function() {
 	return Triage;
 }()
 
+Triage.init('127.0.0.1:6543', 'frontend');		
 
