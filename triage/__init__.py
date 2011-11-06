@@ -18,6 +18,7 @@ def main(global_config, **settings):
     #views
     config.add_static_view('static', 'triage:static')
     config.scan('triage.views')
+    config.scan('triage.subscribers')
     #routes
     configure_routes(config)
     # MongoDB
