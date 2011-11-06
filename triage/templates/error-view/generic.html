@@ -7,7 +7,7 @@
 
 	<dl>
 		{% for e in other_errors %}
-			<dt><a href="/error/{{ e._id }}">{{e.message}}</a></dt>
+			<dt><a href="{{route_url('error_view', project=selected_project.id, id=e._id)}}">{{e.message}}</a></dt>
 			<dd data-timeago="{{ e.timestamp }}"></dd>
 		{% endfor %}
 	</dl>
@@ -19,9 +19,9 @@
 	{% block toolbar %}
 		<ul id="navigation" class="toolbar cf">
 			{% if error.hidden %}
-				<li><a href="/error/{{ error._id }}/show">Unhide Error</a></li>
+				<li><a href="{{route_url('error_toggle_hide', project=selected_project.id, id=error._id)}}">Unhide Error</a></li>
 			{% else %}
-				<li><a href="/error/{{ error._id }}/hide">Hide Error</a></li>
+				<li><a href="{{route_url('error_toggle_hide', project=selected_project.id, id=error._id)}}">Hide Error</a></li>
 			{% endif %}
 			<li><a href="#">Mark as unseen</a></li>
 			<li><a href="#">Create Github issue</a></li>
@@ -45,12 +45,7 @@
 			</h2>
 		</hgroup>
 
-		<dl>
-			{% if error._id %}
-			<dt>ID</dt>
-			<dd>{{ error._id }}</dd>
-			{% endif %}
-			
+		<dl>			
 			{% if error.code %}
 			<dt>Code</dt>
 			<dd>{{ error.code }}</dd>

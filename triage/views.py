@@ -90,45 +90,22 @@ def error_view(request):
 
 
 
-@view_config(route_name='error_hide')
-def error_hide(request):
+@view_config(route_name='error_toggle_hide')
+def error_toggle_hide(request):
 	available_projects = request.registry.settings['projects']
 	selected_project = get_selected_project(request)
 
 	error_id = request.matchdict['id']
 	error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
 
-	if error != None:
-		error['hidden'] = True
+	if error:
+		error['hidden'] = not error.get('hidden', False)
 		request.db[selected_project['collection']].save(error)
 		
 		url = request.route_url('error_list', project=selected_project['id']) 
 		return HTTPFound(location=url)
 
 	return HTTPNotFound()
-	
-	return { 'error' : error , 'other_errors': other_errors }
-
-
-
-@view_config(route_name='error_show')
-def error_show(request):
-	available_projects = request.registry.settings['projects']
-	selected_project = get_selected_project(request)
-		
-	error_id = request.matchdict['id']
-	error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
-
-	if error != None:
-		error['hidden'] = False
-		request.db[selected_project['collection']].save(error)
-		
-		url = request.route_url('error_list', project=selected_project['id']) 
-		return HTTPFound(location=url)
-
-	return HTTPNotFound()
-	
-	return { 'error' : error , 'other_errors': other_errors }
 
 
 
