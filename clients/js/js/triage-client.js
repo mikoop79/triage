@@ -1,4 +1,4 @@
-var Triage = function() {
+var Triage = function () {
 	"use strict";
 
 	var Triage = {
@@ -8,7 +8,7 @@ var Triage = function() {
 		portal: null,
 		queue: [],
 
-		init: function(host, application) {
+		init: function (host, application) {
 			this.host = host;
 			this.application = application;
 
@@ -16,24 +16,20 @@ var Triage = function() {
 			
 			this.portal = new Triage.Portal(this.host);
 
-			window.onerror = function(msg, url, line) {
+			window.onerror = function (msg, url, line) {
 				self.logError(msg, url, line);
 			};
 		},
 
-		flush: function(){
-			this.getPortal().executeRequest();
-		},
-
-		logError: function(msg, url, line, severity) {
+		logError: function (msg, url, line, severity) {
 			this.getPortal().request(this._urlData('error', msg, url, line, severity));
 		},
 
-		logMsg: function(msg, url, line) {
+		logMsg: function (msg, url, line) {
 			this.getPortal().request(this._urlData('msg', msg, url, line));
 		},
 
-		_urlData: function(name, exception, url, line, severity) {
+		_urlData: function (name, exception, url, line, severity) {
 			var data = new Triage.UrlData();
 			data
 				.add('application', this.application)
@@ -41,7 +37,7 @@ var Triage = function() {
 				.add('language', this.language)
 				.add('level', name)
 				.add('line', line)
-				.add('type', 'exception')
+				.add('type', 'error')
 				.add('message', exception)
 								
 				//Context data
@@ -49,7 +45,7 @@ var Triage = function() {
 				.add('useragent', navigator.userAgent)
 				.add('cookies', document.cookie);
 
-			if(severity){
+			if (severity) {
 				data.add('severity', severity)				
 			}
 
