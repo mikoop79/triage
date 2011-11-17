@@ -25,3 +25,4 @@ logs
 .buildpath
 .project
 .settings/
+*.sublime-*
