@@ -1,32 +1,18 @@
-from time import time
 from pyramid.view import view_config
 from pyramid.renderers import render_to_response
 from pymongo.objectid import ObjectId
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from triage.helpers import get_errors, get_error_count
 from pymongo import DESCENDING
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from jinja2 import Markup
 
 from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
 from deform.widget import TextAreaWidget
-import base64, json
-import pprint #Use for dumping objects pprint.pprint(object)
-
-import logging
-log = logging.getLogger(__name__)
-
-
-@view_config(route_name='index')
-def index(request):
-	available_projects = request.registry.settings['projects']
-	selected_project = request.registry.settings['default_project']
-	url = request.route_url('error_list', project=selected_project)
-	return HTTPFound(location=url)
-
+from time import time
 
 @view_config(route_name='error_list')
-def error_list(request):
+def list(request):
 	available_projects = request.registry.settings['projects']
 	selected_project = get_selected_project(request)
 
@@ -49,7 +35,7 @@ def error_list(request):
 
 
 @view_config(route_name='error_view')
-def error_view(request):
+def view(request):
 	available_projects = request.registry.settings['projects']
 	selected_project = get_selected_project(request)
 
@@ -110,7 +96,7 @@ def error_view(request):
 
 
 @view_config(route_name='error_toggle_hide')
-def error_toggle_hide(request):
+def toggle_hide(request):
 	available_projects = request.registry.settings['projects']
 	selected_project = get_selected_project(request)
 
@@ -125,25 +111,6 @@ def error_toggle_hide(request):
 		return HTTPFound(location=url)
 
 	return HTTPNotFound()
-
-
-@view_config(route_name='api_log', renderer='string')
-def api_log(request):
-	available_projects = request.registry.settings['projects']
-
-	# Extract error data out of get parameters
-	get_params = dict(request.str_GET)
-	error = json.loads( base64.b64decode(get_params['data']) )
-	error["timestamp"] = time.time()
-
-	try:
-		selected_project = available_projects[error['application']]
-		request.db[selected_project['collection']].insert(error)
-	except:
-		return { 'success' : False }
-
-	return { 'success' : True }
-
 
 def get_selected_project(request):
 	selected_project_key = request.matchdict['project']
