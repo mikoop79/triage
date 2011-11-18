@@ -5,12 +5,13 @@ from pymongo.objectid import ObjectId
 from triage.helpers import get_errors, get_error_count
 from pymongo import DESCENDING
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-
 from jinja2 import Markup
 
 from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
 from deform.widget import TextAreaWidget
+import base64, json
+import pprint #Use for dumping objects pprint.pprint(object)
 
 import logging
 log = logging.getLogger(__name__)
@@ -98,8 +99,12 @@ def error_view(request):
 		'error': error,
 		'other_errors': other_errors,
 		'selected_project': selected_project,
+<<<<<<< HEAD
 		'available_projects': available_projects,
 		'form': Markup(form_render)
+=======
+		'available_projects': available_projects
+>>>>>>> Added object encoding to javascript error streams
 	}
 
 	try:
@@ -134,8 +139,10 @@ def error_toggle_hide(request):
 def api_log(request):
 	available_projects = request.registry.settings['projects']
 
-	error = dict(request.str_GET)
-	error["timestamp"] = time()
+	# Extract error data out of get parameters
+	get_params = dict(request.str_GET)
+	error = json.loads( base64.b64decode(get_params['data']) )
+	error["timestamp"] = time.time()
 
 	try:
 		selected_project = available_projects[error['application']]
@@ -144,7 +151,6 @@ def api_log(request):
 		return { 'success' : False }
 
 	return { 'success' : True }
-
 
 
 def get_selected_project(request):
