@@ -91,9 +91,7 @@ def error_view(request):
 	request.db[selected_project['collection']].save(error)
 
 	other_errors = request.db['contest-errors'].find({
-		'type': error.get('type', None),
-		'line': error.get('line', None),
-		'file': error.get('file', None)
+		'hash': error.get('hash', None)
 	}).sort('timestamp', DESCENDING)
 
 	params = {
