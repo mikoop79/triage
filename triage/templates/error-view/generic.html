@@ -133,8 +133,8 @@
 
 		<thead>
 			<tr>
-				<th>File</th>
 				<th>Method</th>
+				<th>File</th>
 			</tr>
 		</thead>
 
@@ -143,10 +143,14 @@
 			{% for row in error.stacktrace %}
 				<tr>
 					<td>
-						{{ row|github_link }}
+						{% if row.class %}{{ row.class }}::{% endif %}{% if row.function %}{{ row.function }}{% endif %}
 					</td>
 					<td>
-						{% if row.class %}{{ row.class }}::{% endif %}{% if row.function %}{{ row.function }}{% endif %}
+						{% if row['file'] %}
+							{{ row|github_link }}
+						{% else %}
+							-
+						{% endif %}
 					</td>
 				</tr>
 			{% endfor %}
