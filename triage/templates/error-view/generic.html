@@ -34,90 +34,90 @@
 			<h1>{{ error.type }}: {{ error.message }}</h1>
 			<h2>
 				{% if error.file %}
-					File "{{ error.file }}", 
+					File "{{ error.file }}",
 				{% endif %}
 				{% if error.line %}
-					line {{ error.line }}, 
+					line {{ error.line }},
 				{% endif %}
-				{% if error.stacktrace %} 
+				{% if error.stacktrace %}
 					in {{ error.stacktrace[0].function }}
 				{% endif %}
 			</h2>
 		</hgroup>
 
-		<dl>			
+		<dl>
 			{% if error.code %}
 			<dt>Code</dt>
 			<dd>{{ error.code }}</dd>
 			{% endif %}
-			
+
 			{% if error.hash %}
 			<dt>Hash</dt>
 			<dd>{{ error.hash }}</dd>
 			{% endif %}
-			
+
 			{% if error.severity %}
 			<dt>Severity</dt>
 			<dd>{{ error.severity }}</dd>
 			{% endif %}
-			
+
 			{% if error.language %}
 			<dt>Language</dt>
 			<dd>{{ error.language }}</dd>
 			{% endif %}
-			
+
 			{% if error.level %}
 			<dt>Level</dt>
 			<dd>{{ error.level }}</dd>
 			{% endif %}
-			
+
 			{% if error.timestamp %}
 			<dt>Timestamp</dt>
 			<dd><span data-timeago="{{ error.timestamp }}"></span></dd>
 			{% endif %}
-			
+
 			{% if error.application %}
 			<dt>Application</dt>
 			<dd>{{ error.application }}</dd>
 			{% endif %}
-			
+
 			{% if error.host %}
 			<dt>Host</dt>
 			<dd>{{ error.host }}</dd>
 			{% endif %}
-			
+
 			{% if error.context %}
 
 			{% if error.context['Server Name'] %}
 			<dt>Server Name</dt>
 			<dd>{{ error.context['Server Name'] }}</dd>
 			{% endif %}
-			
+
 			{% if error.context['User IP'] %}
 			<dt>User IP</dt>
 			<dd>{{ error.context['User IP'] }}</dd>
 			{% endif %}
-			
+
 			{% if error.context['Request'] %}
 			<dt>Request</dt>
 			<dd>{{ error.context['Request'] }}</dd>
 			{% endif %}
-			
+
 			{% if error.context['Environment'] %}
 			<dt>Environment</dt>
 			<dd>{{ error.context['Environment'] }}</dd>
 			{% endif %}
-			
+
 			{% if error.context['Referer'] %}
 			<dt>Referer</dt>
 			<dd>{{ error.context['Referer'] }}</dd>
 			{% endif %}
-			
+
 			{% if error.context['User'] %}
 			<dt>User</dt>
 			<dd>{{ error.context['User'] }}</dd>
 			{% endif %}
-			
+
 			{% if error.context['User Agent'] %}
 			<dt>User Agent</dt>
 			<dd>{{ error.context['User Agent'] }}</dd>
@@ -139,7 +139,7 @@
 		</thead>
 
 		<tbody>
-			
+
 			{% for row in error.stacktrace %}
 				<tr>
 					<td>
@@ -152,7 +152,31 @@
 			{% endfor %}
 
 		</tbody>
-		
+
 	</table>
+
+	{% if form %}
+		{{ form }}
+	{% endif %}
+
+	{% if error.comments %}
+	<table class="bordered-table zebra-striped">
+
+		<tbody>
+
+			{% for row in error.comments%}
+				<tr>
+					<td>
+						{{ row.name }} - <span data-timeago="{{ row.timecreated }}">{{ row.timecreated }}</span>
+						<br />
+						{{ row.comment }}
+					</td>
+				</tr>
+			{% endfor %}
+
+		</tbody>
+
+	</table>
+	{% endif %}
 
 {% endblock %}

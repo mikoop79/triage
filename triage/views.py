@@ -5,7 +5,12 @@ from pymongo.objectid import ObjectId
 from triage.helpers import get_errors, get_error_count
 from pymongo import DESCENDING
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-import time
+
+from jinja2 import Markup
+
+from triage.forms import CommentsSchema
+from deform import Form, ValidationFailure
+from deform.widget import TextAreaWidget
 
 import logging
 log = logging.getLogger(__name__)
@@ -15,7 +20,7 @@ log = logging.getLogger(__name__)
 def index(request):
 	available_projects = request.registry.settings['projects']
 	selected_project = request.registry.settings['default_project']
-	url = request.route_url('error_list', project=selected_project) 
+	url = request.route_url('error_list', project=selected_project)
 	return HTTPFound(location=url)
 
 
@@ -31,8 +36,8 @@ def error_list(request):
 		errors = get_errors(request, selected_project, show)
 	except:
 		errors = []
-		
-	params = { 
+
+	params = {
 		'errors': errors,
 		'selected_project': selected_project,
 		'available_projects': available_projects,
@@ -55,6 +60,33 @@ def error_view(request):
 	if not error:
 		return HTTPNotFound()
 
+	schema = CommentsSchema()
+	form = Form(schema, buttons=('submit',))
+	form.set_widgets({'comment': TextAreaWidget()})
+
+	if 'submit' in request.POST:
+		controls = request.POST.items()
+
+		try:
+			values = form.validate(controls)
+
+			comments = error.get('comments', []);
+			comments.append({
+				'name': values['name'],
+				'comment': values['comment'],
+				'timecreated': time()
+			})
+			error['comments'] = comments
+
+			request.db[selected_project['collection']].save(error)
+
+			url = request.route_url('error_view', project=selected_project['id'], id=error_id)
+			return HTTPFound(location=url)
+		except ValidationFailure, e:
+			form_render = e.render()
+	else:
+		form_render = form.render()
+
 	error['seen'] = True
 	request.db[selected_project['collection']].save(error)
 
@@ -68,7 +100,8 @@ def error_view(request):
 		'error': error,
 		'other_errors': other_errors,
 		'selected_project': selected_project,
-		'available_projects': available_projects		
+		'available_projects': available_projects,
+		'form': Markup(form_render)
 	}
 
 	try:
@@ -91,8 +124,8 @@ def error_toggle_hide(request):
 	if error:
 		error['hidden'] = not error.get('hidden', False)
 		request.db[selected_project['collection']].save(error)
-		
-		url = request.route_url('error_list', project=selected_project['id']) 
+
+		url = request.route_url('error_list', project=selected_project['id'])
 		return HTTPFound(location=url)
 
 	return HTTPNotFound()
@@ -104,10 +137,10 @@ def api_log(request):
 	available_projects = request.registry.settings['projects']
 
 	error = dict(request.str_GET)
-	error["timestamp"] = time.time()
+	error["timestamp"] = time()
 
 	try:
-		selected_project = available_projects[error['application']]	
+		selected_project = available_projects[error['application']]
 		request.db[selected_project['collection']].insert(error)
 	except:
 		return { 'success' : False }
