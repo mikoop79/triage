@@ -78,7 +78,7 @@ def view(request):
 
     other_errors = request.db['contest-errors'].find({
         'hash': error.get('hash', None)
-    }).sort('timestamp', DESCENDING)
+    }).sort('timestamp', DESCENDING).limit(20)
 
     params = {
         'error': error,
