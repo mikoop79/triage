@@ -160,23 +160,19 @@
 	{% endif %}
 
 	{% if error.comments %}
-	<table class="bordered-table zebra-striped">
-
-		<tbody>
-
-			{% for row in error.comments%}
-				<tr>
-					<td>
-						{{ row.name }} - <span data-timeago="{{ row.timecreated }}">{{ row.timecreated }}</span>
-						<br />
-						{{ row.comment }}
-					</td>
-				</tr>
-			{% endfor %}
-
-		</tbody>
-
-	</table>
+	<ul id="comments">
+		{% for row in error.comments %}
+			<li class="comment">
+				<div class="comments-info">
+					About <span data-timeago="{{ row.timecreated }}">{{ row.timecreated }}</span> {{ row.name }} said:
+				</div>
+				<div class="comments-comment">
+					{{ row.comment }}
+				</div>
+				</td>
+			</li>
+		{% endfor %}
+	</ul>
 	{% endif %}
 
 {% endblock %}

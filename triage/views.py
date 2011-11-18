@@ -25,7 +25,6 @@ def index(request):
 	return HTTPFound(location=url)
 
 
-
 @view_config(route_name='error_list')
 def error_list(request):
 	available_projects = request.registry.settings['projects']
@@ -47,7 +46,6 @@ def error_list(request):
 	}
 
 	return render_to_response('error-list.html', params)
-
 
 
 @view_config(route_name='error_view')
@@ -110,7 +108,6 @@ def error_view(request):
 		return render_to_response(template, params)
 
 
-
 @view_config(route_name='error_toggle_hide')
 def error_toggle_hide(request):
 	available_projects = request.registry.settings['projects']
@@ -127,7 +124,6 @@ def error_toggle_hide(request):
 		return HTTPFound(location=url)
 
 	return HTTPNotFound()
-
 
 
 @view_config(route_name='api_log', renderer='string')
@@ -156,4 +152,3 @@ def get_selected_project(request):
 		return available_projects[selected_project_key]
 	else:
 		raise HTTPNotFound()
-
