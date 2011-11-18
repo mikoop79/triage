@@ -27,7 +27,7 @@ setup(name='triage',
       install_requires=requires,
       tests_require=requires,
       test_suite="triage",
-      entry_points = """\
+      entry_points="""\
       [paste.app_factory]
       main = triage:main
       """,

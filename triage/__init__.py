@@ -25,5 +25,3 @@ def main(global_config, **settings):
     config.registry.settings['projects'] = app_settings.PROJECTS
     config.registry.settings['default_project'] = app_settings.DEFAULT_PROJECT
     return config.make_wsgi_app()
-
-

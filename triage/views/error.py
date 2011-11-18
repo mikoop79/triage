@@ -14,110 +14,110 @@ from time import time
 
 @view_config(route_name='error_list')
 def list(request):
-	available_projects = request.registry.settings['projects']
-	selected_project = get_selected_project(request)
+    available_projects = request.registry.settings['projects']
+    selected_project = get_selected_project(request)
 
-	show = request.params.get('show', 'unseen')
+    show = request.params.get('show', 'unseen')
 
-	try:
-		errors = get_errors(request, selected_project, show)
-	except:
-		errors = []
+    try:
+        errors = get_errors(request, selected_project, show)
+    except:
+        errors = []
 
-	params = {
-		'errors': errors,
-		'selected_project': selected_project,
-		'available_projects': available_projects,
-		'show': show,
-		'get_error_count': lambda x: get_error_count(request, selected_project, x)
-	}
+    params = {
+        'errors': errors,
+        'selected_project': selected_project,
+        'available_projects': available_projects,
+        'show': show,
+        'get_error_count': lambda x: get_error_count(request, selected_project, x)
+    }
 
-	return render_to_response('error-list.html', params)
+    return render_to_response('error-list.html', params)
 
 
 @view_config(route_name='error_view')
 def view(request):
-	available_projects = request.registry.settings['projects']
-	selected_project = get_selected_project(request)
+    available_projects = request.registry.settings['projects']
+    selected_project = get_selected_project(request)
 
-	error_id = request.matchdict['id']
-	error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
+    error_id = request.matchdict['id']
+    error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
 
-	if not error:
-		return HTTPNotFound()
+    if not error:
+        return HTTPNotFound()
 
-	schema = CommentsSchema()
-	form = Form(schema, buttons=('submit',))
-	form.set_widgets({'comment': TextAreaWidget()})
+    schema = CommentsSchema()
+    form = Form(schema, buttons=('submit',))
+    form.set_widgets({'comment': TextAreaWidget()})
 
-	if 'submit' in request.POST:
-		controls = request.POST.items()
+    if 'submit' in request.POST:
+        controls = request.POST.items()
 
-		try:
-			values = form.validate(controls)
+        try:
+            values = form.validate(controls)
 
-			comments = error.get('comments', [])
-			comments.append({
-				'name': values['name'],
-				'comment': values['comment'],
-				'timecreated': time()
-			})
-			error['comments'] = comments
+            comments = error.get('comments', [])
+            comments.append({
+                'name': values['name'],
+                'comment': values['comment'],
+                'timecreated': time()
+            })
+            error['comments'] = comments
 
-			request.db[selected_project['collection']].save(error)
+            request.db[selected_project['collection']].save(error)
 
-			url = request.route_url('error_view', project=selected_project['id'], id=error_id)
-			return HTTPFound(location=url)
-		except ValidationFailure, e:
-			form_render = e.render()
-	else:
-		form_render = form.render()
+            url = request.route_url('error_view', project=selected_project['id'], id=error_id)
+            return HTTPFound(location=url)
+        except ValidationFailure, e:
+            form_render = e.render()
+    else:
+        form_render = form.render()
 
-	error['seen'] = True
-	request.db[selected_project['collection']].save(error)
+    error['seen'] = True
+    request.db[selected_project['collection']].save(error)
 
-	other_errors = request.db['contest-errors'].find({
-		'hash': error.get('hash', None)
-	}).sort('timestamp', DESCENDING)
+    other_errors = request.db['contest-errors'].find({
+        'hash': error.get('hash', None)
+    }).sort('timestamp', DESCENDING)
 
-	params = {
-		'error': error,
-		'other_errors': other_errors,
-		'selected_project': selected_project,
-		'available_projects': available_projects,
-		'form': Markup(form_render)
-	}
+    params = {
+        'error': error,
+        'other_errors': other_errors,
+        'selected_project': selected_project,
+        'available_projects': available_projects,
+        'form': Markup(form_render)
+    }
 
-	try:
-		template = 'error-view/' + str(error['language']).lower() + '.html'
-		return render_to_response(template, params)
-	except:
-		template = 'error-view/generic.html'
-		return render_to_response(template, params)
+    try:
+        template = 'error-view/' + str(error['language']).lower() + '.html'
+        return render_to_response(template, params)
+    except:
+        template = 'error-view/generic.html'
+        return render_to_response(template, params)
 
 
 @view_config(route_name='error_toggle_hide')
 def toggle_hide(request):
-	selected_project = get_selected_project(request)
+    selected_project = get_selected_project(request)
 
-	error_id = request.matchdict['id']
-	error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
+    error_id = request.matchdict['id']
+    error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
 
-	if error:
-		error['hidden'] = not error.get('hidden', False)
-		request.db[selected_project['collection']].save(error)
+    if error:
+        error['hidden'] = not error.get('hidden', False)
+        request.db[selected_project['collection']].save(error)
 
-		url = request.route_url('error_list', project=selected_project['id'])
-		return HTTPFound(location=url)
+        url = request.route_url('error_list', project=selected_project['id'])
+        return HTTPFound(location=url)
 
-	return HTTPNotFound()
+    return HTTPNotFound()
 
 
 def get_selected_project(request):
-	selected_project_key = request.matchdict['project']
-	available_projects = request.registry.settings['projects']
+    selected_project_key = request.matchdict['project']
+    available_projects = request.registry.settings['projects']
 
-	if selected_project_key in available_projects:
-		return available_projects[selected_project_key]
-	else:
-		raise HTTPNotFound()
+    if selected_project_key in available_projects:
+        return available_projects[selected_project_key]
+    else:
+        raise HTTPNotFound()
