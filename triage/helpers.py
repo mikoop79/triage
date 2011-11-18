@@ -50,6 +50,7 @@ def get_errors(request, project, show):
 	result = (request.db[collection+'-aggregate']
 		.find(get_filter(show))
 		.sort('value.youngest', DESCENDING)
+		.limit(50)
 	)
 	set_last_reduced(request, collection)
 
