@@ -47,7 +47,7 @@ def get_errors(request, project, show):
 
     last_reduced = get_last_reduced(request, collection)
 
-    request.db[collection].map_reduce(map, reduce, out={'reduce': collection + '-aggregate'}, query={'timestamp': {'$gt': last_reduced}})
+    request.db[collection].map_reduce(map, reduce, out={'reduce': collection + '-aggregate'}, query={'timestamp': {'$gt': last_reduced}}).find()
     result = (request.db[collection + '-aggregate']
         .find(get_filter(show))
         .sort('value.youngest', DESCENDING)
