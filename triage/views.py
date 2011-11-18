@@ -97,7 +97,8 @@ def error_view(request):
 		'error': error,
 		'other_errors': other_errors,
 		'selected_project': selected_project,
-		'available_projects': available_projects
+		'available_projects': available_projects,
+		'form': Markup(form_render)
 	}
 
 	try:
