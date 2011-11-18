@@ -1,12 +1,13 @@
 from pymongo.code import Code
 from pymongo import DESCENDING
+from time import time
 
 def get_errors(request, project, show):
 
 	map = Code("""
 
 	function() {
-		emit( this.type +":"+ this.line +":"+ this.file, {
+		emit( this.hash, {
 			message: this.message,
 			type: this.type,
 			line: this.line,
