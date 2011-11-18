@@ -11,6 +11,7 @@ from deform import Form, ValidationFailure
 from deform.widget import TextAreaWidget
 from time import time
 
+
 @view_config(route_name='error_list')
 def list(request):
 	available_projects = request.registry.settings['projects']
@@ -55,7 +56,7 @@ def view(request):
 		try:
 			values = form.validate(controls)
 
-			comments = error.get('comments', []);
+			comments = error.get('comments', [])
 			comments.append({
 				'name': values['name'],
 				'comment': values['comment'],
@@ -88,7 +89,7 @@ def view(request):
 	}
 
 	try:
-		template = 'error-view/'+str(error['language']).lower()+'.html'
+		template = 'error-view/' + str(error['language']).lower() + '.html'
 		return render_to_response(template, params)
 	except:
 		template = 'error-view/generic.html'
@@ -97,7 +98,6 @@ def view(request):
 
 @view_config(route_name='error_toggle_hide')
 def toggle_hide(request):
-	available_projects = request.registry.settings['projects']
 	selected_project = get_selected_project(request)
 
 	error_id = request.matchdict['id']
@@ -111,6 +111,7 @@ def toggle_hide(request):
 		return HTTPFound(location=url)
 
 	return HTTPNotFound()
+
 
 def get_selected_project(request):
 	selected_project_key = request.matchdict['project']
