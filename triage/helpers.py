@@ -43,11 +43,32 @@ def get_errors(request, project, show):
 
 	collection = project['collection']
 
-	return (request.db[collection]
-		.map_reduce(map, reduce, collection+'-aggregate')
+	last_reduced = get_last_reduced(request, collection)
+
+	result = (request.db[collection]
+		.map_reduce(map, reduce, out={'reduce': collection+'-aggregate'}, query={'timestamp': {'$gt':last_reduced}})
 		.find(get_filter(show))
 		.sort('value.youngest', DESCENDING)
 	)
+	set_last_reduced(request, collection)
+
+	return result	
+
+
+def set_last_reduced(request, collection):
+	request.db['triage'].update(
+		{ 'collection': collection, 'lastreduced' : True },
+		{ 'collection': collection, 'lastreduced' : True, 'time': time() },
+		upsert=True
+	)
+
+
+def get_last_reduced(request, collection):
+	doc = request.db['triage'].find_one({ 'collection': collection, 'lastreduced' : True })
+	if doc:
+		return doc['time']
+	return 0
+
 
 
 def get_error_count(request, project, show):
