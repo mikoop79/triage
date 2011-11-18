@@ -29,12 +29,12 @@
 
 <div id="information">
 
-	<table class="bordered-table zebra-striped">
+	<table class="bordered-table zebra-striped" data-tablesort="true">
 
 		<thead>
 			<tr>
 				<!-- <th></th> -->
-				<th>No. Occurrences</th>
+				<th>Occurrences</th>
 				<th>Type</th>
 				<th>Latest Message</th>
 				<!-- <th>Tags</th> -->
@@ -48,7 +48,7 @@
 					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
 					<td>{{ error.value.count|int }}</td>
 					<td><a href="{{route_url('error_view', project=selected_project.id, id=error.value._id)}}">{{ error.value.type }}</a></td>
-					<td><a href="{{route_url('error_view', project=selected_project.id, id=error.value._id)}}">{{ error.value.message|truncate(length=130) }}</a></td>
+					<td><a href="{{route_url('error_view', project=selected_project.id, id=error.value._id)}}" title="error.value.message">{{ error.value.message|truncate(length=130) }}</a></td>
 					<!-- <td>
 						<span class="label important">{{ error.level }}</span>
 						<span class="label">Default</span>

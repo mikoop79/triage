@@ -23,17 +23,19 @@
 	</head>
 
 	<body>
-		
+
 		{% block body %}{% endblock %}
 
 		{% block scripts %}
 		<script src="/static/js/libs/development/jquery-1.7.0.js"></script>
 		<script src="/static/js/libs/development/bootstrap-dropdown-1.4.0.js"></script>
+		<script src="/static/js/libs/development/jquery.tablesorter-2.0.5b.js"></script>
 
 		<!-- scripts concatenated and minified via ant build script-->
 		<script src="/static/js/application.js"></script>
 		<script src="/static/js/triage.js"></script>
 		<script src="/static/js/modules/time-ago.js"></script>
+		<script src="/static/js/modules/table-sorter.js"></script>
 		<script type="text/javascript">
 
 			var Triage = Triage || {};
