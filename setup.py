@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md')).read()
 
-requires = ['pyramid', 'WebError', 'pymongo', 'deform']
+requires = ['pyramid', 'WebError', 'pymongo', 'deform', 'pysqlite']
 
 setup(name='triage',
       version='0.0',
