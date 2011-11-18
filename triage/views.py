@@ -99,12 +99,7 @@ def error_view(request):
 		'error': error,
 		'other_errors': other_errors,
 		'selected_project': selected_project,
-<<<<<<< HEAD
-		'available_projects': available_projects,
-		'form': Markup(form_render)
-=======
 		'available_projects': available_projects
->>>>>>> Added object encoding to javascript error streams
 	}
 
 	try:
