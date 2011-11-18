@@ -4,7 +4,7 @@ Triage.modules.tableAccordion = (function($, app) {
 	return {
 		start: function() {
 			$(function() {
-				$("[data-tablesort]").tablesorter({ sortList: [[3,0]] });
+				$("[data-tablesort]").tablesorter();
 			});
 		},
 		stop: function() { }
