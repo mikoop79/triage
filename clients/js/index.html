@@ -9,10 +9,11 @@
 			//<![CDATA[
 				"use strict";
 
-				var demo = function(){		
+				var demo = function(){
 					var $result = $('#result');
 
 					$("#logerror").click(function(){
+						console.log('test');
 						Triage.logError('test', document.URL, new Error().lineNumber);
 					});
 
@@ -34,6 +35,8 @@
 				}
 
 				$(function(){
+					Triage.init('127.0.0.1:6543', 'frontend', printStackTrace);
+
 					demo();
 				});
 			//]]>
@@ -42,7 +45,7 @@
 	<body>
 		<div id="container">
 			<div id="result">
-				
+
 			</div><!-- /result -->
 			<div id="demo">
 				<a href="javascript:void(0);" title="log error" id="logerror">Log error</a>	|
