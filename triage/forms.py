@@ -16,3 +16,10 @@ class UserLoginSchema(MappingSchema):
     email = SchemaNode(String(), description='Enter your email address', validator=Email())
 
     password = SchemaNode(String(), description='Enter your password', widget=PasswordWidget())
+
+
+class UserRegisterSchema(MappingSchema):
+
+    email = SchemaNode(String(), description='Enter your email address', validator=Email())
+
+    password = SchemaNode(String(), description='Enter your password', widget=PasswordWidget())

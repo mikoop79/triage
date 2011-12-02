@@ -10,32 +10,39 @@
 
 					<a href="{{route_url('index')}}" class="brand">Triage</a>
 
-					{% if available_projects %}
+
 					<ul class="nav">
 
-						<li data-dropdown="dropdown" class="dropdown pull-right">
-							<a class="dropdown-toggle" href="">{{selected_project.name}}</a>
-							<ul class="dropdown-menu">
-								{% for p in available_projects.itervalues() %}
-									<li {% if p.id == selected_project.id %}class="active"{% endif %}>
-										<a href="{{route_url('error_list', project=p.id)}}">{{p.name}}</a>
-									</li>
-								{% endfor %}
-							</ul>
-						</li>
+						{% if available_projects %}
+
+							<li data-dropdown="dropdown" class="dropdown pull-right">
+								<a class="dropdown-toggle" href="">{{selected_project.name}}</a>
+								<ul class="dropdown-menu">
+									{% for p in available_projects.itervalues() %}
+										<li {% if p.id == selected_project.id %}class="active"{% endif %}>
+											<a href="{{route_url('error_list', project=p.id)}}">{{p.name}}</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</li>
+
+						{% endif %}
 
 						{% if get_user %}
 						<li>
-							<a href="{{route_url('user_logout')}}">Logout</a>
+							<a href="{{route_url('user_logout')}}">Logout as {{ get_user['email'] }}</a>
 						</li>
 						{% else %}
 						<li>
 							<a href="{{route_url('user_login')}}">Login</a>
 						</li>
+						<li>
+							<a href="{{route_url('user_register')}}">Register</a>
+						</li>
 						{% endif %}
 
 					</ul>
-					{% endif %}
+
 				</div>
 			</div>
 		</header>

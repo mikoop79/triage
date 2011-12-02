@@ -10,8 +10,6 @@ from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
 from time import time
 
-from pyramid.security import authenticated_userid
-
 
 @view_config(route_name='error_list', permission='authenticated')
 def list(request):
