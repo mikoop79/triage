@@ -4,9 +4,12 @@ from pyramid.renderers import render_to_response
 from jinja2 import Markup
 from triage.forms import UserLoginSchema
 from deform import Form, ValidationFailure
+from pyramid.security import remember, forget
+from pyramid.security import authenticated_userid
 
 
 @view_config(route_name='user_login')
+@view_config(context='pyramid.httpexceptions.HTTPForbidden')
 def login(request):
 
     schema = UserLoginSchema()
@@ -30,8 +33,8 @@ def login(request):
                 return HTTPNotFound()
 
             if (user['password'] == password):
-                request.session['_id'] = user['_id']
-                return HTTPFound(location='/')
+                headers = remember(request, str(user['_id']))
+                return HTTPFound(location='/', headers=headers)
 
         except ValidationFailure, e:
             form_render = e.render()
@@ -48,7 +51,9 @@ def login(request):
 @view_config(route_name='user_logout')
 def logout(request):
 
-    if '_id' in request.session:
-        del(request.session['_id'])
+    userid = authenticated_userid(request)
+    if userid:
+        headers = forget(request)
+        return HTTPFound(location='/user/login', headers=headers)
 
     return HTTPFound(location='/user/login')

@@ -10,8 +10,10 @@ from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
 from time import time
 
+from pyramid.security import authenticated_userid
 
-@view_config(route_name='error_list')
+
+@view_config(route_name='error_list', permission='authenticated')
 def list(request):
     available_projects = request.registry.settings['projects']
     selected_project = get_selected_project(request)
@@ -34,7 +36,7 @@ def list(request):
     return render_to_response('error-list.html', params)
 
 
-@view_config(route_name='error_view')
+@view_config(route_name='error_view', permission='authenticated')
 def view(request):
     available_projects = request.registry.settings['projects']
     selected_project = get_selected_project(request)
