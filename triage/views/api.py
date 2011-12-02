@@ -11,7 +11,7 @@ def log(request):
     # Extract error data out of get parameters
     get_params = dict(request.str_GET)
     error = json.loads(base64.b64decode(get_params['data']))
-    error["timestamp"] = time.time()
+    error["timestamp"] = time()
 
     try:
         selected_project = available_projects[error['application']]
