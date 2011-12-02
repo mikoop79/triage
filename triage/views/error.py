@@ -8,7 +8,6 @@ from jinja2 import Markup
 
 from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
-from deform.widget import TextAreaWidget
 from time import time
 
 
@@ -48,7 +47,6 @@ def view(request):
 
     schema = CommentsSchema()
     form = Form(schema, buttons=('submit',))
-    form.set_widgets({'comment': TextAreaWidget()})
 
     if 'submit' in request.POST:
         controls = request.POST.items()

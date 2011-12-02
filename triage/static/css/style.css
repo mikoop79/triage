@@ -192,7 +192,8 @@ body {
 }
 
 .content form textarea,
-.content form input[type=text] {
+.content form input[type=text],
+.content form input[type=password] {
 	width: 400px;
 	margin-left: 20px;
 }
