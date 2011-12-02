@@ -1,20 +1,18 @@
 import zmq
 import msgpack
+from time import sleep
+
 context = zmq.Context()
-socket = context.socket(zmq.REP)
-socket.bind("tcp://0.0.0.0:11300")
+socket = context.socket(zmq.SUB)
+socket.bind("tcp://0.0.0.0:5001")
+socket.setsockopt(zmq.SUBSCRIBE, '')
 
 unpacker = msgpack.Unpacker()
 packer = msgpack.Packer()
 
 while True:
-    try:
-        unpacker.feed(socket.recv())
-        msg = unpacker.unpack()
-        socket.send(packer.pack({'status': 'ok'}))
-        print msg
-
-    except Exception as inst:
-        print "Error" 
-        print inst
+    unpacker.feed(socket.recv())
+    for msg in unpacker:
+        if type(msg) == dict:
+            print msg
 

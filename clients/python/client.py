@@ -10,7 +10,7 @@ class ZeroMQMessagePackClient:
     context = zmq.Context()
 
     def __init__(self, server_uri):
-        self.socket = self.context.socket(zmq.REQ)
+        self.socket = self.context.socket(zmq.PUB)
         self.socket.connect(server_uri)
 
     def pack(self, data):
@@ -22,7 +22,6 @@ class ZeroMQMessagePackClient:
 
     def send(self, data):
         self.socket.send(self.pack(data))
-        return self.unpack(self.socket.recv())
 
 
 class TriageClient (ZeroMQMessagePackClient):
@@ -41,11 +40,7 @@ class TriageClient (ZeroMQMessagePackClient):
         })
 
 
-client = TriageClient("tcp://127.0.0.1:5000")
+client = TriageClient("tcp://127.0.0.1:5001")
 
-client.log_message('warn', 'This is a warning')
-client.log_message('warn', 'This is a warning')
-client.log_message('warn', 'This is a warning')
-client.log_message('warn', 'This is a warning')
-client.log_message('warn', 'This is a warning')
-
+for i in xrange(0, 1000000):
+    client.log_message('warn', 'This is a warning')
