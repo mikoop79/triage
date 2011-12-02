@@ -5,7 +5,7 @@ The server waits for messages from the client
 and echoes back the received message
 */
 $server = new ZMQSocket(new ZMQContext(), ZMQ::SOCKET_REP);
-$server->bind("tcp://127.0.0.1:5555");
+$server->bind("tcp://127.0.0.1:6258");
 
 /* Loop receiving and echoing back */
 while ($message = $server->recv()) {

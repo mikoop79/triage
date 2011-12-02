@@ -31,7 +31,7 @@ class TriageClient (ZeroMQMessagePackClient):
             'error': error,
             'time': time()
         })
-    
+
     def log_message(self, level, message):
         return self.send({
             'level': level,
