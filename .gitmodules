@@ -1,3 +1,6 @@
 [submodule "clients/php"]
 	path = clients/php
 	url = git@github.com:lwc/triage-php.git
+[submodule "clients/js"]
+	path = clients/js
+	url = git@github.com:lwc/triage-js.git
