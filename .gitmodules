@@ -1,0 +1,3 @@
+[submodule "clients/php"]
+	path = clients/php
+	url = git@github.com:lwc/triage-php.git
