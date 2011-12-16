@@ -3,7 +3,7 @@ import msgpack
 import mongoengine
 from mongoengine.queryset import DoesNotExist
 from models import ErrorInstance, Error
-
+import sys
 
 # config
 ZMQ_URI = "tcp://0.0.0.0:5001"
@@ -38,4 +38,7 @@ while True:
     unpacker.feed(socket.recv())
     for msg in unpacker:
         if type(msg) == dict:
+            try:
                 handle_msg(msg)
+            except Exception as a:
+                print >> sys.stderr, a
