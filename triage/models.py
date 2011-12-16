@@ -8,16 +8,15 @@ class Model(object):
     def __init__(self, data):
         self.data = data
 
-    def __get__(self, obj, cls=None):
-        return self.data[obj]
+    def __getattr__(self, name):
+        return self.data[name]
 
-    def __set__(self, obj, val):
-        self.data[obj] = val
-        return self.data[obj]
+    def __setattr__(self, name, val):
+        self.data[name] = val
+        return self.data[name]
 
-    def __delete__(self, obj):
-        del self.data[obj]
-        return self.data[obj]
+    def __delattr__(self, name):
+        del self.data[name]
 
     def save(self, collection):
         collection.save(self.data)
