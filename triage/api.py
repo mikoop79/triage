@@ -24,7 +24,7 @@ unpacker = msgpack.Unpacker()
 
 
 def handle_msg(msg):
-    new = ErrorInstance(msg)
+    new = ErrorInstance.from_raw(msg)
     try:
         error = Error.objects.get(hash=new.get_hash())
         error.update_from_instance(new)

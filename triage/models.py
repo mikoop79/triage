@@ -1,7 +1,7 @@
 import settings
 import re
 import md5
-
+from time import time
 from mongoengine import *
 
 
@@ -34,7 +34,7 @@ class ErrorInstance(EmbeddedDocument):
     language = StringField(required=True)    
     type = StringField(required=True)
     message = StringField(required=True)
-    timecreated = DateTimeField()
+    timecreated = IntField()
     line = IntField()
     file = StringField()
     context = DictField()
@@ -42,7 +42,9 @@ class ErrorInstance(EmbeddedDocument):
 
     @classmethod
     def from_raw(cls, raw):
-        doc = cls(raw)
+        doc = cls(**raw)
+        doc.timecreated = int(time())
+        return doc
 
     def get_hash(self):
         return error_hash({
@@ -60,8 +62,8 @@ class Error(Document):
     language = StringField(required=True)
     message = StringField(required=True)
     type = StringField(required=True)
-    timelatest = DateTimeField()
-    timefirst = DateTimeField()
+    timelatest = IntField()
+    timefirst = IntField()
     count = IntField()
     claimedby = ReferenceField(User)
     tags = ListField(StringField(max_length=30))
@@ -96,7 +98,7 @@ if __name__ == "__main__":
 
     connect('logs', host='lcawood.vm')
 
-    new = ErrorInstance(**{
+    new = ErrorInstance.from_raw({
         'project': 'test',
         'language': 'PHP',
         'type': 'TestingException',
