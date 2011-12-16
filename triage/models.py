@@ -1,4 +1,3 @@
-import settings
 import re
 import md5
 from time import time
@@ -7,6 +6,7 @@ from mongoengine import *
 
 digit_re = re.compile('\d')
 hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
+
 
 def error_hash(identity):
     hash = ''
@@ -53,7 +53,6 @@ class ErrorInstance(EmbeddedDocument):
             'type': self.type,
             'message': digit_re.sub('', hex_re.sub('', self.message))
         })
-
 
 
 class Error(Document):
@@ -111,12 +110,12 @@ if __name__ == "__main__":
         'backtrace': [{ 'file': 'another.py', 'line': 45, 'function': 43}, { 'file': 'another.py', 'line': 45, 'function': 43}]
     })
 
-    try:   
+    try:
         error = Error.objects.get(hash=new.get_hash())
         error.update_from_instance(new)
     except DoesNotExist:
         error = Error.from_instance(new)
-    error.save()    
+    error.save()
 
 
 

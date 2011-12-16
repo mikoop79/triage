@@ -3,7 +3,6 @@ from pyramid.renderers import render_to_response
 from pymongo.objectid import ObjectId
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.security import authenticated_userid
-from pymongo import DESCENDING
 from jinja2 import Markup
 
 from triage.models import User, Error
@@ -33,9 +32,8 @@ def list(request):
     selected_project = get_selected_project(request)
 
     show = request.params.get('show', 'unseen')
-
     try:
-        errors = Error.objects(project=selected_project['id'])
+        errors = get_filter(selected_project, show)
     except:
         errors = []
 
@@ -111,37 +109,36 @@ def view(request):
 
 @view_config(route_name='error_toggle_claim', permission='authenticated')
 def toggle_claim(request):
+    error_id = request.matchdict['id']
     selected_project = get_selected_project(request)
 
-    error_id = request.matchdict['id']
-    error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
-    user = User.get_by_userid(request, authenticated_userid(request))
+    try:
+        user = User.objects().with_id(authenticated_userid(request))
 
-    if error and user:
-        error['claimed'] = None if error.get('claimed') else user['_id']
-        request.db[selected_project['collection']].save(error)
+        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error.claimedby = None if error.claimedby else user
+        error.save()
 
         url = request.route_url('error_view', project=selected_project['id'], id=error_id)
         return HTTPFound(location=url)
-
-    return HTTPNotFound()
+    except:
+        return HTTPNotFound()
 
 
 @view_config(route_name='error_toggle_hide')
 def toggle_hide(request):
+    error_id = request.matchdict['id']
     selected_project = get_selected_project(request)
 
-    error_id = request.matchdict['id']
-    error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
-
-    if error:
-        error['hidden'] = not error.get('hidden', False)
-        request.db[selected_project['collection']].save(error)
+    try:
+        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error.hidden = not error.hidden
+        error.save()
 
         url = request.route_url('error_list', project=selected_project['id'])
         return HTTPFound(location=url)
-
-    return HTTPNotFound()
+    except:
+        return HTTPNotFound()
 
 
 def get_selected_project(request):

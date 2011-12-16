@@ -24,11 +24,11 @@
 				<li><a href="{{route_url('error_toggle_hide', project=selected_project.id, id=error._id)}}">Hide Error</a></li>
 			{% endif %}
 
-			{% if claimed %}
-				{% if user['email'] == claimed['email'] %}
+			{% if error.claimedby %}
+				{% if user['email'] == error.claimedby['email'] %}
 					<li class="pull-right"><a href="{{route_url('error_toggle_claim', project=selected_project.id, id=error._id)}}">Unclaim Error</a></li>
 				{% else %}
-					<li class="pull-right no-link">Claimed by {{claimed.email}}</li>
+					<li class="pull-right no-link">Claimed by {{ error.claimedby['name'] }}</li>
 				{% endif %}
 			{% else %}
 				<li class="pull-right"><a href="{{route_url('error_toggle_claim', project=selected_project.id, id=error._id)}}">Claim Error</a></li>
