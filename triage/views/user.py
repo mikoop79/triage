@@ -2,19 +2,20 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.renderers import render_to_response
 from jinja2 import Markup
-from triage.forms import UserLoginSchema, UserRegisterSchema, user_register_validator
+from triage.forms import UserLoginSchema, UserRegisterSchema, user_register_validator, user_login_validator
 from deform import Form, ValidationFailure
 from pyramid.security import remember, forget
 from pyramid.security import authenticated_userid
 from triage.models import User
 from time import time
+from mongoengine.queryset import DoesNotExist
 
 
 @view_config(route_name='user_login')
 @view_config(context='pyramid.httpexceptions.HTTPForbidden')
 def login(request):
 
-    schema = UserLoginSchema()
+    schema = UserLoginSchema(validator=user_login_validator)
     form = Form(schema, buttons=('submit',))
 
     userid = authenticated_userid(request)
@@ -27,12 +28,13 @@ def login(request):
         try:
             values = form.validate(controls)
 
-            user = User.get_by_params(request, {'email': values['email']})
-            if not user:
+            try:
+                user = User.objects.get(email=values['email'])
+            except DoesNotExist:
                 return HTTPNotFound()
 
-            if (user['password'] == values['password']):
-                headers = remember(request, str(user['_id']))
+            if (user.password == values['password']):
+                headers = remember(request, str(user._id))
                 return HTTPFound(location='/', headers=headers)
 
         except ValidationFailure, e:
@@ -63,11 +65,11 @@ def register(request):
         try:
             values = form.validate(controls)
 
-            user = User({
-                'email': values['email'],
-                'password': values['password'],
-                'created': time()
-            }).save(request.db['users'])
+            user = User(
+                email=values['email'],
+                password=values['password'],
+                created=int(time())
+            ).save()
 
             headers = remember(request, str(user))
             return HTTPFound(location='/', headers=headers)

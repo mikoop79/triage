@@ -11,6 +11,8 @@ from pyramid.authorization import ACLAuthorizationPolicy
 
 from pyramid.security import Allow, Everyone, Authenticated
 
+import mongoengine
+
 
 class RootFactory(object):
     __acl__ = [
@@ -36,19 +38,22 @@ def main(global_config, **settings):
 
     #beaker
     config.include('pyramid_beaker')
+
     #jinja2
     config.include('pyramid_jinja2')
     config.add_renderer('.html', 'pyramid_jinja2.renderer_factory')
+
     #views
     config.add_static_view('static', 'triage:static')
     config.scan('triage.views')
     config.scan('triage.subscribers')
+
     #routes
     configure_routes(config)
-    # MongoDB
-    db_uri = settings['mongodb.url']
-    conn = pymongo.Connection(db_uri)
-    config.registry.settings['mongodb_conn'] = conn
+
+    #mongoengine
+    mongoengine.connect(settings['mongodb.db_name'], host=settings['mongodb.host'])
+
     config.registry.settings['projects'] = app_settings.PROJECTS
     config.registry.settings['default_project'] = app_settings.DEFAULT_PROJECT
 

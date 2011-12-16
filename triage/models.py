@@ -1,5 +1,3 @@
-import settings
-from pymongo.objectid import ObjectId
 import re
 import md5
 
@@ -11,14 +9,15 @@ hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
 
 
 class User(Document):
-    name = StringField()
     email = EmailField(required=True)
-
+    password = StringField(required=True)
+    created = IntField(required=True)
 
 
 class Comment(EmbeddedDocument):
-    content = StringField()
-    author = ReferenceField(User)
+    author = ReferenceField(User, required=True)
+    content = StringField(required=True)
+    created = IntField()
 
 
 class ErrorInstance(EmbeddedDocument):
@@ -60,7 +59,7 @@ def error_hash(identity):
     hash = ''
     for key in identity:
         hash = hash + key + ":" + str(identity[key])
-    
+
     return md5.new(hash).hexdigest()
 
 

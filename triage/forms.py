@@ -2,7 +2,16 @@ from colander import MappingSchema, SchemaNode
 from colander import String, Email
 from colander import Invalid
 from deform.widget import PasswordWidget, TextAreaWidget
-import pyramid.threadlocal as threadlocal
+from triage.models import User
+
+
+def user_login_validator(form, values):
+    try:
+        User.objects.get(email=values['email'])
+    except:
+        exception = Invalid(form, 'There was a problem with your submission')
+        exception['email'] = 'Your Email or Password is incorrect'
+        raise exception
 
 
 def user_register_validator(form, values):
@@ -10,8 +19,7 @@ def user_register_validator(form, values):
     if values['password'] != values['confirm_password']:
         exception['confirm_password'] = 'Confirm Password does not match Password'
 
-    email = values['email']
-    user = threadlocal.get_current_request().db['users'].find_one({'email': email})
+    user = User.objects(email=values['email'])
     if user:
         exception['email'] = 'Email already exists in our database'
 
