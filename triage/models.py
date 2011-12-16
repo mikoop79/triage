@@ -1,5 +1,4 @@
 import settings
-from pymongo.objectid import ObjectId
 import re
 import md5
 
@@ -8,6 +7,13 @@ from mongoengine import *
 
 digit_re = re.compile('\d')
 hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
+
+def error_hash(identity):
+    hash = ''
+    for key in identity:
+        hash = hash + key + ":" + str(identity[key])
+    
+    return md5.new(hash).hexdigest()
 
 
 class User(Document):
@@ -21,15 +27,42 @@ class Comment(EmbeddedDocument):
     author = ReferenceField(User)
 
 
+class BackTraceEntry(EmbeddedDocument):
+    file = StringField()
+    line = IntField()
+    function = StringField()
+
+
 class ErrorInstance(EmbeddedDocument):
+    project = StringField(required=True)
+    language = StringField(required=True)    
     type = StringField(required=True)
     message = StringField(required=True)
+    timecreated = DateTimeField()
     line = IntField()
     file = StringField()
+    context = DictField()
+    backtrace = ListField(EmbeddedDocumentField(BackTraceEntry))
+
+    @classmethod
+    def from_raw(cls, raw):
+        doc = cls(raw)
+        doc.hash = doc.get_hash()
+
+    def get_hash():
+        return error_hash({
+            'application': self.application,
+            'language': self.language,
+            'type': self.type,
+            'message': digit_re.sub('', hex_re.sub('', self.message))
+        })
+
 
 
 class Error(Document):
     hash = StringField(required=True)
+    project = StringField(required=True)
+    language = StringField(required=True)
     message = StringField(required=True)
     type = StringField(required=True)
     timelatest = DateTimeField()
@@ -40,15 +73,24 @@ class Error(Document):
     comments = ListField(EmbeddedDocumentField(Comment))
     instances = ListField(EmbeddedDocumentField(ErrorInstance))
 
-    def add_instance(self, new):
-        self.hash = new.hash
+    @classmethod
+    def from_instance(instance):
+        error = cls()
+        error.hash = instance.hash
+        error.project = instance.project
+        error.language = instance.language
+        error.type = instance.type
+        error.timelatest = instance.timecreated
+        error.timefirst = instance.timecreated
+        error.count = 1
+        error.instances = [instance]
+        return error
+
+    def update_from_instance(self, new):
         self.message = new.message
         self.timelatest = new.timestamp
         self.count = self.count + 1
-        try:
-            self.instances.append(new)
-        except AttributeError:
-            self.instances = [new]
+        self.instances.append(new)
 
 
 
@@ -56,12 +98,8 @@ class Error(Document):
 
 
 
-def error_hash(identity):
-    hash = ''
-    for key in identity:
-        hash = hash + key + ":" + str(identity[key])
-    
-    return md5.new(hash).hexdigest()
+
+
 
 
 """
