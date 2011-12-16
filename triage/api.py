@@ -1,18 +1,35 @@
 import zmq
 import msgpack
+import mongoengine
 from time import sleep
 
+from models import Project
+
+
+# config
+ZMQ_URI = "tcp://0.0.0.0:5001"
+MONGO_URI = "mongodb://lcawood.vm"
+MONGO_DB = "logs"
+
+# zero mq
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
-socket.bind("tcp://0.0.0.0:5001")
+socket.bind(ZMQ_URI)
 socket.setsockopt(zmq.SUBSCRIBE, '')
 
-unpacker = msgpack.Unpacker()
-packer = msgpack.Packer()
+# mongo
+mongoengine.connect('logs', host='lcawood.vm')
 
+# messagepack
+unpacker = msgpack.Unpacker()
+
+# serve!
 while True:
     unpacker.feed(socket.recv())
     for msg in unpacker:
         if type(msg) == dict:
-            print msg
+            try:
+                new = ErrorInstance(msg)
 
+            except:
+                print "Error"

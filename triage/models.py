@@ -1,25 +1,69 @@
 import settings
 from pyramid.security import authenticated_userid
 from pymongo.objectid import ObjectId
+import re
+import md5
+
+from mongoengine import *
 
 
-class Model(object):
-    def __init__(self, data):
-        self.__dict__ = data
-
-    def __repr__(self):
-        return self.__dict__.__repr__()
-
-    def save(self, collection):
-        collection.save(self.__dict__)
+digit_re = re.compile('\d')
+hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
 
 
-class Error(Model):
+class User(Document):
+    name = StringField()
+    email = EmailField(required=True)
 
-    def get_instances(self):
-        return self.instances
+
+class Comment(EmbeddedDocument):
+    content = StringField()
+    author = ReferenceField(User)
+
+
+class ErrorInstance(EmbeddedDocument):
+    type = StringField(required=True)
+    message = StringField(required=True)
+    line = IntField()
+    file = StringField()
+
+
+class Error(Document):
+    hash = StringField(required=True)
+    message = StringField(required=True)
+    type = StringField(required=True)
+    timelatest = DateTimeField()
+    timefirst = DateTimeField()
+    count = IntField()
+    claimedby = ReferenceField(User)
+    tags = ListField(StringField(max_length=30))
+    comments = ListField(EmbeddedDocumentField(Comment))
+    instances = ListField(EmbeddedDocumentField(ErrorInstance))
+
+    def add_instance(self, new):
+        self.hash = new.hash
+        self.message = new.message
+        self.timelatest = new.timestamp
+        self.count = self.count + 1
+        try:
+            self.instances.append(new)
+        except AttributeError:
+            self.instances = [new]
+
+
+
+
+
+
+
+def error_hash(identity):
+    hash = ''
+    for key in identity:
+        hash = hash + key + ":" + str(identity[key])
     
+    return md5.new(hash).hexdigest()
 
+"""
 class ErrorInstance(Model):
 
     def project(self):
@@ -27,10 +71,13 @@ class ErrorInstance(Model):
 
     def get_aggregate_identity(self):
         return {
+            'application': self.application,
+            'language': self.language,
             'type': self.type,
-            'line': self.line,
-            'file': self.file,
+            'message': digit_re.sub('', hex_re.sub('', self.message))
         }
+
+
 
 
 class Project:
@@ -44,13 +91,5 @@ class Project:
     def get_collection(self, db):
         return db[self.settings['collection']]
 
+"""
 
-class User(Model):
-
-    @classmethod
-    def get_user(self, request):
-        userid = authenticated_userid(request)
-        if not userid:
-            return
-
-        return request.db['users'].find_one({'_id': ObjectId(userid)})
