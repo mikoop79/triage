@@ -11,14 +11,14 @@ class Model(object):
         return self.__dict__.__repr__()
 
     def save(self, collection):
-        collection.save(self.__dict__)
+        return collection.save(self.__dict__)
 
 
 class Error(Model):
 
     def get_instances(self):
         return self.instances
-    
+
 
 class ErrorInstance(Model):
 
@@ -54,3 +54,7 @@ class User(Model):
             return
 
         return request.db['users'].find_one({'_id': ObjectId(userid)})
+
+    @classmethod
+    def get_user_by(self, request, dict):
+        return request.db['users'].find_one(dict)

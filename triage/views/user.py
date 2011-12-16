@@ -6,6 +6,8 @@ from triage.forms import UserLoginSchema, UserRegisterSchema, user_register_vali
 from deform import Form, ValidationFailure
 from pyramid.security import remember, forget
 from pyramid.security import authenticated_userid
+from triage.models import User
+from time import time
 
 
 @view_config(route_name='user_login')
@@ -25,15 +27,11 @@ def login(request):
         try:
             values = form.validate(controls)
 
-            email = values['email']
-            password = values['password']
-
-            user = request.db['users'].find_one({'email': email})
-
+            user = User.get_user_by(request, {'email': values['email']})
             if not user:
                 return HTTPNotFound()
 
-            if (user['password'] == password):
+            if (user['password'] == values['password']):
                 headers = remember(request, str(user['_id']))
                 return HTTPFound(location='/', headers=headers)
 
@@ -65,14 +63,11 @@ def register(request):
         try:
             values = form.validate(controls)
 
-            email = values['email']
-            password = values['password']
-
-            user = {
-                'email': email,
-                'password': password
-            }
-            user = request.db['users'].save(user)
+            user = User({
+                'email': values['email'],
+                'password': values['password'],
+                'created': time()
+            }).save(request.db['users'])
 
             headers = remember(request, str(user))
             return HTTPFound(location='/', headers=headers)

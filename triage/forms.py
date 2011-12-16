@@ -21,8 +21,6 @@ def user_register_validator(form, values):
 
 class CommentsSchema(MappingSchema):
 
-    name = SchemaNode(String(), description='Your name')
-
     comment = SchemaNode(String(), description='Your comment', widget=TextAreaWidget())
 
 
