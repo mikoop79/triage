@@ -4,27 +4,21 @@ from pymongo.objectid import ObjectId
 
 
 class Model(object):
-
     def __init__(self, data):
-        self.data = data
+        self.__dict__ = data
 
-    def __getattr__(self, name):
-        return self.data[name]
-
-    def __setattr__(self, name, val):
-        self.data[name] = val
-        return self.data[name]
-
-    def __delattr__(self, name):
-        del self.data[name]
+    def __repr__(self):
+        return self.__dict__.__repr__()
 
     def save(self, collection):
-        collection.save(self.data)
+        collection.save(self.__dict__)
 
 
 class Error(Model):
-    pass
 
+    def get_instances(self):
+        return self.instances
+    
 
 class ErrorInstance(Model):
 
