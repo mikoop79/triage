@@ -71,13 +71,26 @@ body {
 	margin-right: 10px;
 }
 
+#navigation.toolbar > li.pull-right {
+	float: right;
+	margin-right: 0;
+	margin-left: 10px;
+}
+
 #navigation.toolbar > li a {
 	display: block;
 	line-height: 40px;
 	height: 40px;
 	padding: 0 20px 0 20px;
 	border: 1px solid #DDDDDD;
+}
 
+#navigation.toolbar > li.no-link {
+	display: block;
+	line-height: 40px;
+	height: 40px;
+	padding: 0 20px 0 20px;
+	border: 1px solid #DDDDDD;
 }
 
 /*	Container

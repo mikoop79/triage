@@ -1,5 +1,4 @@
 import settings
-from pyramid.security import authenticated_userid
 from pymongo.objectid import ObjectId
 import re
 import md5
@@ -14,6 +13,7 @@ hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
 class User(Document):
     name = StringField()
     email = EmailField(required=True)
+
 
 
 class Comment(EmbeddedDocument):
@@ -63,6 +63,7 @@ def error_hash(identity):
     
     return md5.new(hash).hexdigest()
 
+
 """
 class ErrorInstance(Model):
 
@@ -92,4 +93,5 @@ class Project:
         return db[self.settings['collection']]
 
 """
+
 

@@ -23,8 +23,16 @@
 			{% else %}
 				<li><a href="{{route_url('error_toggle_hide', project=selected_project.id, id=error._id)}}">Hide Error</a></li>
 			{% endif %}
-			<li><a href="#">Mark as unseen</a></li>
-			<li><a href="#">Create Github issue</a></li>
+
+			{% if claimed %}
+				{% if user['email'] == claimed['email'] %}
+					<li class="pull-right"><a href="{{route_url('error_toggle_claim', project=selected_project.id, id=error._id)}}">Unclaim Error</a></li>
+				{% else %}
+					<li class="pull-right no-link">Claimed by {{claimed.email}}</li>
+				{% endif %}
+			{% else %}
+				<li class="pull-right"><a href="{{route_url('error_toggle_claim', project=selected_project.id, id=error._id)}}">Claim Error</a></li>
+			{% endif %}
 		</ul>
 	{% endblock %}
 
@@ -159,7 +167,7 @@
 
 	</table>
 
-	{% if form %}
+	{% if form and user %}
 		{{ form }}
 	{% endif %}
 

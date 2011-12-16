@@ -1,4 +1,5 @@
-import pyramid.threadlocal as threadlocal
+from pyramid import threadlocal
+from pyramid.security import authenticated_userid
 from pyramid.events import BeforeRender, subscriber, NewRequest
 from triage.models import User
 
@@ -14,7 +15,7 @@ def add_route_url(event):
 @subscriber(BeforeRender)
 def add_get_user(event):
     request = event.get('request') or threadlocal.get_current_request()
-    event['get_user'] = User.get_user(request)
+    event['get_user'] = User.get_by_userid(request, authenticated_userid(request))
 
 
 # Adds mongo db to each request
