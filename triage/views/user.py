@@ -27,7 +27,7 @@ def login(request):
         try:
             values = form.validate(controls)
 
-            user = User.get_user_by(request, {'email': values['email']})
+            user = User.get_by_params(request, {'email': values['email']})
             if not user:
                 return HTTPNotFound()
 

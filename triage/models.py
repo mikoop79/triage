@@ -1,5 +1,4 @@
 import settings
-from pyramid.security import authenticated_userid
 from pymongo.objectid import ObjectId
 
 
@@ -48,13 +47,12 @@ class Project:
 class User(Model):
 
     @classmethod
-    def get_user(self, request):
-        userid = authenticated_userid(request)
+    def get_by_userid(self, request, userid):
         if not userid:
-            return
+            return None
 
         return request.db['users'].find_one({'_id': ObjectId(userid)})
 
     @classmethod
-    def get_user_by(self, request, dict):
-        return request.db['users'].find_one(dict)
+    def get_by_params(self, request, params):
+        return request.db['users'].find_one(params)
