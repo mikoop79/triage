@@ -3,7 +3,6 @@ from pyramid.renderers import render_to_response
 from pymongo.objectid import ObjectId
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.security import authenticated_userid
-from triage.helpers import get_errors, get_error_count
 from pymongo import DESCENDING
 from jinja2 import Markup
 

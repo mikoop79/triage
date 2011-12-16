@@ -17,14 +17,15 @@ def error_hash(identity):
 
 
 class User(Document):
-    name = StringField()
     email = EmailField(required=True)
-
+    password = StringField(required=True)
+    created = IntField(required=True)
 
 
 class Comment(EmbeddedDocument):
-    content = StringField()
-    author = ReferenceField(User)
+    author = ReferenceField(User, required=True)
+    content = StringField(required=True)
+    created = IntField()
 
 
 class BackTraceEntry(EmbeddedDocument):
@@ -91,11 +92,6 @@ class Error(Document):
         self.timelatest = new.timestamp
         self.count = self.count + 1
         self.instances.append(new)
-
-
-
-
-
 
 
 
