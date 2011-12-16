@@ -3,7 +3,7 @@ import msgpack
 import mongoengine
 from mongoengine.queryset import DoesNotExist
 from models import ErrorInstance, Error
-import sys
+import logging
 
 # config
 ZMQ_URI = "tcp://0.0.0.0:5001"
@@ -22,6 +22,8 @@ mongoengine.connect('logs', host='lcawood.vm')
 # messagepack
 unpacker = msgpack.Unpacker()
 
+#logging
+logging.basicConfig(level=logging.DEBUG)
 
 def handle_msg(msg):
     new = ErrorInstance.from_raw(msg)
@@ -40,5 +42,5 @@ while True:
         if type(msg) == dict:
             try:
                 handle_msg(msg)
-            except Exception as a:
-                print >> sys.stderr, a
+            except Exception, a:
+                logging.exception('Failed to process error')
