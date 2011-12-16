@@ -9,6 +9,7 @@ hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
 
 
 class User(Document):
+    name = StringField(required=True)
     email = EmailField(required=True)
     password = StringField(required=True)
     created = IntField(required=True)
@@ -17,7 +18,7 @@ class User(Document):
 class Comment(EmbeddedDocument):
     author = ReferenceField(User, required=True)
     content = StringField(required=True)
-    created = IntField()
+    created = IntField(required=True)
 
 
 class ErrorInstance(EmbeddedDocument):
