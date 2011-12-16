@@ -29,12 +29,6 @@ class Comment(EmbeddedDocument):
     created = IntField(required=True)
 
 
-class BackTraceEntry(EmbeddedDocument):
-    file = StringField()
-    line = IntField()
-    function = StringField()
-
-
 class ErrorInstance(EmbeddedDocument):
     project = StringField(required=True)
     language = StringField(required=True)    
@@ -44,16 +38,15 @@ class ErrorInstance(EmbeddedDocument):
     line = IntField()
     file = StringField()
     context = DictField()
-    backtrace = ListField(EmbeddedDocumentField(BackTraceEntry))
+    backtrace = ListField(DictField())
 
     @classmethod
     def from_raw(cls, raw):
         doc = cls(raw)
-        doc.hash = doc.get_hash()
 
-    def get_hash():
+    def get_hash(self):
         return error_hash({
-            'application': self.application,
+            'project': self.project,
             'language': self.language,
             'type': self.type,
             'message': digit_re.sub('', hex_re.sub('', self.message))
@@ -76,26 +69,50 @@ class Error(Document):
     instances = ListField(EmbeddedDocumentField(ErrorInstance))
 
     @classmethod
-    def from_instance(instance):
+    def from_instance(cls, instance):
         error = cls()
-        error.hash = instance.hash
+        error.hash = instance.get_hash()
         error.project = instance.project
         error.language = instance.language
         error.type = instance.type
         error.timelatest = instance.timecreated
         error.timefirst = instance.timecreated
+        error.message = instance.message
         error.count = 1
         error.instances = [instance]
         return error
 
     def update_from_instance(self, new):
         self.message = new.message
-        self.timelatest = new.timestamp
+        self.timelatest = new.timecreated
         self.count = self.count + 1
         self.instances.append(new)
 
 
 
+
+if __name__ == "__main__":
+    from mongoengine.queryset import DoesNotExist
+
+    connect('logs', host='lcawood.vm')
+
+    new = ErrorInstance(**{
+        'project': 'test',
+        'language': 'PHP',
+        'type': 'TestingException',
+        'message': 'Error on line 123',
+        'line': 123,
+        'file': 'testing.py',
+        'context': { 'host': 'google.com' },
+        'backtrace': [{ 'file': 'another.py', 'line': 45, 'function': 43}, { 'file': 'another.py', 'line': 45, 'function': 43}]
+    })
+
+    try:   
+        error = Error.objects.get(hash=new.get_hash())
+        error.update_from_instance(new)
+    except DoesNotExist:
+        error = Error.from_instance(new)
+    error.save()    
 
 
 
