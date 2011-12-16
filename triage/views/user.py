@@ -2,7 +2,7 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.renderers import render_to_response
 from jinja2 import Markup
-from triage.forms import UserLoginSchema, UserRegisterSchema
+from triage.forms import UserLoginSchema, UserRegisterSchema, user_register_validator
 from deform import Form, ValidationFailure
 from pyramid.security import remember, forget
 from pyramid.security import authenticated_userid
@@ -52,7 +52,7 @@ def login(request):
 @view_config(route_name='user_register')
 def register(request):
 
-    schema = UserRegisterSchema()
+    schema = UserRegisterSchema(validator=user_register_validator)
     form = Form(schema, buttons=('submit',))
 
     userid = authenticated_userid(request)
