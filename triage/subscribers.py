@@ -17,7 +17,7 @@ def add_get_user(event):
     request = event.get('request') or threadlocal.get_current_request()
     userid = authenticated_userid(request)
 
-    if not userid:
+    try:
+        event['get_user'] = User.objects().with_id(userid)
+    except:
         return
-
-    event['get_user'] = User.objects().with_id(userid)

@@ -17,6 +17,7 @@ def error_hash(identity):
 
 
 class User(Document):
+    name = StringField(required=True)
     email = EmailField(required=True)
     password = StringField(required=True)
     created = IntField(required=True)
@@ -25,7 +26,7 @@ class User(Document):
 class Comment(EmbeddedDocument):
     author = ReferenceField(User, required=True)
     content = StringField(required=True)
-    created = IntField()
+    created = IntField(required=True)
 
 
 class BackTraceEntry(EmbeddedDocument):

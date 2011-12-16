@@ -66,6 +66,7 @@ def register(request):
             values = form.validate(controls)
 
             user = User(
+                name=values['name'],
                 email=values['email'],
                 password=values['password'],
                 created=int(time())

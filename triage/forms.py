@@ -19,6 +19,10 @@ def user_register_validator(form, values):
     if values['password'] != values['confirm_password']:
         exception['confirm_password'] = 'Confirm Password does not match Password'
 
+    user = User.objects(name=values['name'])
+    if user:
+        exception['name'] = 'You have to choose a unique name'
+
     user = User.objects(email=values['email'])
     if user:
         exception['email'] = 'Email already exists in our database'
@@ -40,6 +44,8 @@ class UserLoginSchema(MappingSchema):
 
 
 class UserRegisterSchema(MappingSchema):
+
+    name = SchemaNode(String(), descriprtion='Enter your name')
 
     email = SchemaNode(String(), description='Enter your email address', validator=Email())
 
