@@ -6,10 +6,25 @@ from pyramid.security import authenticated_userid
 from pymongo import DESCENDING
 from jinja2 import Markup
 
-from triage.models import User
+from triage.models import User, Error
 from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
 from time import time
+
+
+def get_error_count(request, selected_project, show):
+    return get_filter(selected_project, show).count()
+
+
+def get_filter(selected_project, show):
+    if show == 'all':
+        return Error.objects(project=selected_project)
+    elif show == 'hidden':
+        return Error.objects(project=selected_project, hidden=True)
+    elif show == 'seen':
+        return Error.objects(project=selected_project, seen=True, hidden__ne=True)
+    elif show == 'unseen':
+        return Error.objects(project=selected_project, seen__ne=True, hidden__ne=True)
 
 
 @view_config(route_name='error_list', permission='authenticated')
@@ -20,7 +35,7 @@ def list(request):
     show = request.params.get('show', 'unseen')
 
     try:
-        errors = get_errors(request, selected_project, show)
+        errors = Error.objects(project=selected_project['id'])
     except:
         errors = []
 
@@ -29,7 +44,7 @@ def list(request):
         'selected_project': selected_project,
         'available_projects': available_projects,
         'show': show,
-        'get_error_count': lambda x: get_error_count(request, selected_project, x)
+        'get_error_count': lambda x: get_error_count(request, selected_project['id'], x)
     }
 
     return render_to_response('error-list.html', params)
@@ -41,10 +56,12 @@ def view(request):
     selected_project = get_selected_project(request)
 
     error_id = request.matchdict['id']
-    error = request.db[selected_project['collection']].find_one({'_id': ObjectId(error_id)})
-
-    if not error:
+    try:
+        error = Error.objects(project=selected_project['id']).with_id(error_id)
+    except:
         return HTTPNotFound()
+
+    user = User.objects().with_id(authenticated_userid(request))
 
     schema = CommentsSchema()
     form = Form(schema, buttons=('submit',))
@@ -54,13 +71,12 @@ def view(request):
 
         try:
             values = form.validate(controls)
-            user = User.get_by_userid(request, authenticated_userid(request))
 
             comments = error.get('comments', [])
             comments.append({
                 'name': user['email'],
                 'comment': values['comment'],
-                'timecreated': time()
+                'timecreated': int(time())
             })
             error['comments'] = comments
 
@@ -73,21 +89,16 @@ def view(request):
     else:
         form_render = form.render()
 
-    error['seen'] = True
-    request.db[selected_project['collection']].save(error)
-
-    other_errors = request.db['contest-errors'].find({
-        'hash': error.get('hash', None)
-    }).sort('timestamp', DESCENDING).limit(20)
+    error.seen = True
+    error.save()
 
     params = {
         'error': error,
-        'other_errors': other_errors,
+        'other_errors': error.instances,
         'selected_project': selected_project,
         'available_projects': available_projects,
         'form': Markup(form_render),
-        'user': User.get_by_userid(request, authenticated_userid(request)),
-        'claimed': User.get_by_userid(request, error.get('claimed'))
+        'user': user
     }
 
     try:

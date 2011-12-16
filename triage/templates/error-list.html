@@ -15,10 +15,10 @@
 
 	<div id="navigation" class="cf">
 		<ul class="pills">
-			<li {% if show == 'unseen' %}class="active"{% endif %}><a href="?show=unseen">New ({{get_error_count('unseen')}})</a></li>
-			<li {% if show == 'seen' %}class="active"{% endif %}><a href="?show=seen">Viewed ({{get_error_count('seen')}})</a></li>
-			<li {% if show == 'hidden' %}class="active"{% endif %}><a href="?show=hidden">Hidden ({{get_error_count('hidden')}})</a></li>
-			<li {% if show == 'all' %}class="active"{% endif %}><a href="?show=all">All ({{get_error_count('all')}})</a></li>
+			<li {% if show == 'unseen' %}class="active"{% endif %}><a href="?show=unseen">New ({{ get_error_count('unseen') }})</a></li>
+			<li {% if show == 'seen' %}class="active"{% endif %}><a href="?show=seen">Viewed ({{ get_error_count('seen') }})</a></li>
+			<li {% if show == 'hidden' %}class="active"{% endif %}><a href="?show=hidden">Hidden ({{ get_error_count('hidden') }})</a></li>
+			<li {% if show == 'all' %}class="active"{% endif %}><a href="?show=all">All ({{ get_error_count('all') }})</a></li>
 		</ul>
 	</div>
 
@@ -46,9 +46,9 @@
 			{% for error in errors %}
 				<tr>
 					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
-					<td>{{ error.value.count|int }}</td>
-					<td><a href="{{route_url('error_view', project=selected_project.id, id=error.value._id)}}">{{ error.value.type }}</a></td>
-					<td><a href="{{route_url('error_view', project=selected_project.id, id=error.value._id)}}" title="error.value.message">{{ error.value.message|truncate(length=130) }}</a></td>
+					<td>{{ error.count|int }}</td>
+					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}">{{ error.type }}</a></td>
+					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">{{ error.message|truncate(length=130) }}</a></td>
 					<!-- <td>
 						<span class="label important">{{ error.level }}</span>
 						<span class="label">Default</span>
@@ -58,8 +58,8 @@
 						<span class="label notice">Notice</span>
 					</td> -->
 					<td>
-						<span data-timeago="{{ error.value.youngest }}"></span> -
-						<span data-timeago="{{ error.value.oldest }}"></span>
+						<span data-timeago="{{ error.timefirst }}"></span> -
+						<span data-timeago="{{ error.timelatest }}"></span>
 					</td>
 				</tr>
 			{% endfor %}

@@ -12,7 +12,7 @@ def error_hash(identity):
     hash = ''
     for key in identity:
         hash = hash + key + ":" + str(identity[key])
-    
+
     return md5.new(hash).hexdigest()
 
 
@@ -31,7 +31,7 @@ class Comment(EmbeddedDocument):
 
 class ErrorInstance(EmbeddedDocument):
     project = StringField(required=True)
-    language = StringField(required=True)    
+    language = StringField(required=True)
     type = StringField(required=True)
     message = StringField(required=True)
     timecreated = IntField()
@@ -69,6 +69,8 @@ class Error(Document):
     tags = ListField(StringField(max_length=30))
     comments = ListField(EmbeddedDocumentField(Comment))
     instances = ListField(EmbeddedDocumentField(ErrorInstance))
+    seen = BooleanField()
+    hidden = BooleanField()
 
     @classmethod
     def from_instance(cls, instance):
