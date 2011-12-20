@@ -105,10 +105,8 @@ def toggle_claim(request):
     selected_project = get_selected_project(request)
 
     try:
-        user = User.objects().with_id(authenticated_userid(request))
-
         error = Error.objects(project=selected_project['id']).with_id(error_id)
-        error.claimedby = None if error.claimedby else user
+        error.claimedby = None if error.claimedby else request.user
         error.save()
 
         url = request.route_url('error_view', project=selected_project['id'], id=error_id)
