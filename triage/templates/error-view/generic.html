@@ -176,10 +176,10 @@
 		{% for row in error.comments %}
 			<li class="comment">
 				<div class="comments-info">
-					About <span data-timeago="{{ row.timecreated }}">{{ row.timecreated }}</span> {{ row.name }} said:
+					About <span data-timeago="{{ row.created }}">{{ row.created }}</span> {{ row.author.name }} said:
 				</div>
 				<div class="comments-comment">
-					{{ row.comment }}
+					{{ row.content }}
 				</div>
 				</td>
 			</li>

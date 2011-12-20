@@ -34,7 +34,7 @@ def login(request):
                 return HTTPNotFound()
 
             if (user.password == values['password']):
-                headers = remember(request, str(user._id))
+                headers = remember(request, str(user.id))
                 return HTTPFound(location='/', headers=headers)
 
         except ValidationFailure, e:
@@ -70,9 +70,10 @@ def register(request):
                 email=values['email'],
                 password=values['password'],
                 created=int(time())
-            ).save()
+            )
+            user.save()
 
-            headers = remember(request, str(user))
+            headers = remember(request, str(user.id))
             return HTTPFound(location='/', headers=headers)
 
         except ValidationFailure, e:

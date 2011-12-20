@@ -5,17 +5,14 @@ from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.security import authenticated_userid
 from jinja2 import Markup
 
-from triage.models import User, Error
+from triage.models import User, Error, Comment
 from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
 from time import time
 
 
-def get_error_count(request, selected_project, show):
-    return get_filter(selected_project, show).count()
-
-
 def get_filter(selected_project, show):
+    selected_project = selected_project['id']
     if show == 'all':
         return Error.objects(project=selected_project)
     elif show == 'hidden':
@@ -42,7 +39,7 @@ def list(request):
         'selected_project': selected_project,
         'available_projects': available_projects,
         'show': show,
-        'get_error_count': lambda x: get_error_count(request, selected_project['id'], x)
+        'get_error_count': lambda x: get_filter(selected_project, x).count()
     }
 
     return render_to_response('error-list.html', params)
@@ -59,8 +56,6 @@ def view(request):
     except:
         return HTTPNotFound()
 
-    user = User.objects().with_id(authenticated_userid(request))
-
     schema = CommentsSchema()
     form = Form(schema, buttons=('submit',))
 
@@ -70,15 +65,12 @@ def view(request):
         try:
             values = form.validate(controls)
 
-            comments = error.get('comments', [])
-            comments.append({
-                'name': user['email'],
-                'comment': values['comment'],
-                'timecreated': int(time())
-            })
-            error['comments'] = comments
-
-            request.db[selected_project['collection']].save(error)
+            error.comments.append(Comment(
+                author = request.user,
+                content = values['comment'],
+                created = int(time())
+            ))
+            error.save()
 
             url = request.route_url('error_view', project=selected_project['id'], id=error_id)
             return HTTPFound(location=url)
@@ -96,7 +88,7 @@ def view(request):
         'selected_project': selected_project,
         'available_projects': available_projects,
         'form': Markup(form_render),
-        'user': user
+        'user': request.user
     }
 
     try:
