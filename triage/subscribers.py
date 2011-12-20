@@ -15,10 +15,9 @@ def add_route_url(event):
 @subscriber(BeforeRender)
 def add_get_user(event):
     request = event.get('request') or threadlocal.get_current_request()
-    userid = authenticated_userid(request)
 
     try:
-        event['get_user'] = User.objects().with_id(userid)
+        event['user'] = request.user
     except:
         return
 

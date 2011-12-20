@@ -28,9 +28,9 @@
 
 						{% endif %}
 
-						{% if get_user %}
+						{% if user %}
 						<li>
-							<a href="{{route_url('user_logout')}}">Logout as {{ get_user['name'] }}</a>
+							<a href="{{route_url('user_logout')}}">Logout as {{ user.name }}</a>
 						</li>
 						{% else %}
 						<li>

@@ -88,7 +88,6 @@ def view(request):
         'selected_project': selected_project,
         'available_projects': available_projects,
         'form': Markup(form_render),
-        'user': request.user
     }
 
     try:
