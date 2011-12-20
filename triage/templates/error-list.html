@@ -18,6 +18,8 @@
 			<li {% if show == 'unseen' %}class="active"{% endif %}><a href="?show=unseen">New ({{ get_error_count('unseen') }})</a></li>
 			<li {% if show == 'seen' %}class="active"{% endif %}><a href="?show=seen">Viewed ({{ get_error_count('seen') }})</a></li>
 			<li {% if show == 'hidden' %}class="active"{% endif %}><a href="?show=hidden">Hidden ({{ get_error_count('hidden') }})</a></li>
+			<li {% if show == 'mine' %}class="active"{% endif %}><a href="?show=mine">Mine ({{ get_error_count('mine') }})</a></li>
+			<li {% if show == 'unclaimed' %}class="active"{% endif %}><a href="?show=unclaimed">Unclaimed ({{ get_error_count('unclaimed') }})</a></li>
 			<li {% if show == 'all' %}class="active"{% endif %}><a href="?show=all">All ({{ get_error_count('all') }})</a></li>
 		</ul>
 	</div>

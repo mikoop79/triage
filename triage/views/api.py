@@ -2,7 +2,7 @@ from pyramid.view import view_config
 from time import time
 import base64
 import json
-from helpers import handle_msg
+from triage.helpers import handle_msg
 
 
 @view_config(route_name='api_log', renderer='string')
