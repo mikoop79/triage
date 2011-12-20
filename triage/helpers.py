@@ -2,6 +2,7 @@ from pymongo.code import Code
 from pymongo import DESCENDING
 from time import time
 from models import Error, ErrorInstance
+from mongoengine.queryset import DoesNotExist
 
 def handle_msg(msg):
     new = ErrorInstance.from_raw(msg)
@@ -11,3 +12,4 @@ def handle_msg(msg):
     except DoesNotExist:
         error = Error.from_instance(new)
     error.save()
+    return error
