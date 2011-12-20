@@ -4,7 +4,7 @@ import mongoengine
 from mongoengine.queryset import DoesNotExist
 from models import ErrorInstance, Error
 import logging
-
+from helpers import handle_msg
 # config
 ZMQ_URI = "tcp://0.0.0.0:5001"
 MONGO_URI = "mongodb://lcawood.vm"
@@ -24,16 +24,6 @@ unpacker = msgpack.Unpacker()
 
 #logging
 logging.basicConfig(level=logging.DEBUG)
-
-def handle_msg(msg):
-    new = ErrorInstance.from_raw(msg)
-    try:
-        error = Error.objects.get(hash=new.get_hash())
-        error.update_from_instance(new)
-    except DoesNotExist:
-        error = Error.from_instance(new)
-    error.save()
- 
 
 # serve!
 while True:
