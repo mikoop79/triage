@@ -47,8 +47,8 @@
 				{% if error.line %}
 					line {{ error.line }},
 				{% endif %}
-				{% if error.stacktrace %}
-					in {{ error.stacktrace[0].function }}
+				{% if instance.backtrace %}
+					in {{ instance.backtrace[0].function }}
 				{% endif %}
 			</h2>
 		</hgroup>
@@ -57,11 +57,6 @@
 			{% if error.code %}
 			<dt>Code</dt>
 			<dd>{{ error.code }}</dd>
-			{% endif %}
-
-			{% if error.hash %}
-			<dt>Hash</dt>
-			<dd>{{ error.hash }}</dd>
 			{% endif %}
 
 			{% if error.severity %}
@@ -94,43 +89,11 @@
 			<dd>{{ error.host }}</dd>
 			{% endif %}
 
-			{% if error.context %}
-
-			{% if error.context['Server Name'] %}
-			<dt>Server Name</dt>
-			<dd>{{ error.context['Server Name'] }}</dd>
-			{% endif %}
-
-			{% if error.context['User IP'] %}
-			<dt>User IP</dt>
-			<dd>{{ error.context['User IP'] }}</dd>
-			{% endif %}
-
-			{% if error.context['Request'] %}
-			<dt>Request</dt>
-			<dd>{{ error.context['Request'] }}</dd>
-			{% endif %}
-
-			{% if error.context['Environment'] %}
-			<dt>Environment</dt>
-			<dd>{{ error.context['Environment'] }}</dd>
-			{% endif %}
-
-			{% if error.context['Referer'] %}
-			<dt>Referer</dt>
-			<dd>{{ error.context['Referer'] }}</dd>
-			{% endif %}
-
-			{% if error.context['User'] %}
-			<dt>User</dt>
-			<dd>{{ error.context['User'] }}</dd>
-			{% endif %}
-
-			{% if error.context['User Agent'] %}
-			<dt>User Agent</dt>
-			<dd>{{ error.context['User Agent'] }}</dd>
-			{% endif %}
-
+			{% if instance.context %}
+				{% for key in instance.context %}
+					<dt>{{key}}</dt>
+					<dd>{{ instance.context[key] }}</dd>				
+				{% endfor %}
 			{% endif %}
 		</dl>
 
@@ -148,13 +111,13 @@
 
 		<tbody>
 
-			{% for row in error.stacktrace %}
+			{% for row in instance.backtrace %}
 				<tr>
 					<td>
 						{% if row.class %}{{ row.class }}::{% endif %}{% if row.function %}{{ row.function }}{% endif %}
 					</td>
 					<td>
-						{% if row['file'] %}
+						{% if row.file %}
 							{{ row|github_link }}
 						{% else %}
 							-

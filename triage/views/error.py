@@ -84,6 +84,7 @@ def view(request):
 
     params = {
         'error': error,
+        'instance': error.instances[-1],
         'other_errors': error.instances,
         'selected_project': selected_project,
         'available_projects': available_projects,
