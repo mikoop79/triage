@@ -1,5 +1,4 @@
 from pyramid.config import Configurator
-import pymongo
 
 from triage.routes import configure_routes
 from triage import settings as app_settings

@@ -1,11 +1,9 @@
 from pyramid.view import view_config
 from pyramid.renderers import render_to_response
-from pymongo.objectid import ObjectId
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from pyramid.security import authenticated_userid
 from jinja2 import Markup
 
-from triage.models import User, Error, Comment
+from triage.models import Error, Comment
 from triage.forms import CommentsSchema
 from deform import Form, ValidationFailure
 from time import time
@@ -70,9 +68,9 @@ def view(request):
             values = form.validate(controls)
 
             error.comments.append(Comment(
-                author = request.user,
-                content = values['comment'],
-                created = int(time())
+                author=request.user,
+                content=values['comment'],
+                created=int(time())
             ))
             error.save()
 
