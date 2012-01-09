@@ -1,8 +1,6 @@
 import zmq
 import msgpack
 import mongoengine
-from mongoengine.queryset import DoesNotExist
-from models import ErrorInstance, Error
 import logging
 
 # config

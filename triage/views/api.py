@@ -1,5 +1,4 @@
 from pyramid.view import view_config
-from time import time
 import base64
 import json
 

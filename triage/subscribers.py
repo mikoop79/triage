@@ -25,7 +25,7 @@ def add_get_user(event):
 # Adds the user to the request after a context is found
 @subscriber(ContextFound)
 def add_user_to_request(event):
-	request = event.request
-	userid = authenticated_userid(request)
-	if (userid):
-		request.user = User.objects().with_id(userid)
+    request = event.request
+    userid = authenticated_userid(request)
+    if (userid):
+        request.user = User.objects().with_id(userid)
