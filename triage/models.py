@@ -2,6 +2,7 @@ import re
 import md5
 from time import time
 from mongoengine import *
+from mongoengine.queryset import DoesNotExist, QuerySet
 
 
 digit_re = re.compile('\d')
@@ -12,7 +13,6 @@ def error_hash(identity):
     hash = ''
     for key in identity:
         hash = hash + key + ":" + str(identity[key])
-
     return md5.new(hash).hexdigest()
 
 
@@ -55,7 +55,26 @@ class ErrorInstance(EmbeddedDocument):
         })
 
 
+class ErrorQuerySet(QuerySet):
+    def find_for_list(self, project, user, show):
+        selected_project = project['id']
+        if show == 'all':
+            return self.filter(project=selected_project)
+        elif show == 'hidden':
+            return self.filter(project=selected_project, hidden=True)
+        elif show == 'seen':
+            return self.filter(project=selected_project, seen=True, hidden__ne=True)
+        elif show == 'unseen':
+            return self.filter(project=selected_project, seen__ne=True, hidden__ne=True)
+        elif show == 'mine':
+            return self.filter(project=selected_project, claimedby=user)
+        elif show == 'unclaimed':
+            return self.filter(project=selected_project, claimedby__exists=False)
+
+
 class Error(Document):
+    meta = { 'queryset_class': ErrorQuerySet }
+
     hash = StringField(required=True)
     project = StringField(required=True)
     language = StringField(required=True)
@@ -72,7 +91,17 @@ class Error(Document):
     hidden = BooleanField()
 
     @classmethod
-    def from_instance(cls, instance):
+    def create_from_msg(cls, msg):
+        new = ErrorInstance.from_raw(msg)
+        try:
+            error = cls.objects.get(hash=new.get_hash())
+            error.update_from_instance(new)
+        except DoesNotExist:
+            error = cls.from_instance(new)
+        return error
+
+    @classmethod
+    def create_from_instance(cls, instance):
         error = cls()
         error.hash = instance.get_hash()
         error.project = instance.project
@@ -90,63 +119,4 @@ class Error(Document):
         self.timelatest = new.timecreated
         self.count = self.count + 1
         self.instances.append(new)
-
-
-
-
-if __name__ == "__main__":
-    from mongoengine.queryset import DoesNotExist
-
-    connect('logs', host='lcawood.vm')
-
-    new = ErrorInstance.from_raw({
-        'project': 'test',
-        'language': 'PHP',
-        'type': 'TestingException',
-        'message': 'Error on line 123',
-        'line': 123,
-        'file': 'testing.py',
-        'context': { 'host': 'google.com' },
-        'backtrace': [{ 'file': 'another.py', 'line': 45, 'function': 43}, { 'file': 'another.py', 'line': 45, 'function': 43}]
-    })
-
-    try:
-        error = Error.objects.get(hash=new.get_hash())
-        error.update_from_instance(new)
-    except DoesNotExist:
-        error = Error.from_instance(new)
-    error.save()
-
-
-
-"""
-class ErrorInstance(Model):
-
-    def project(self):
-        return Project(self.data['application'])
-
-    def get_aggregate_identity(self):
-        return {
-            'application': self.application,
-            'language': self.language,
-            'type': self.type,
-            'message': digit_re.sub('', hex_re.sub('', self.message))
-        }
-
-
-
-
-class Project:
-    @classmethod
-    def from_error(cls, error):
-        return cls(error['application'])
-
-    def __init__(self, name):
-        self.settings = settings.PROJECTS[name]
-
-    def get_collection(self, db):
-        return db[self.settings['collection']]
-
-"""
-
 

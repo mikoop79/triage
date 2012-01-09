@@ -11,21 +11,6 @@ from deform import Form, ValidationFailure
 from time import time
 
 
-def get_filter(selected_project, user, show):
-    selected_project = selected_project['id']
-    if show == 'all':
-        return Error.objects(project=selected_project)
-    elif show == 'hidden':
-        return Error.objects(project=selected_project, hidden=True)
-    elif show == 'seen':
-        return Error.objects(project=selected_project, seen=True, hidden__ne=True)
-    elif show == 'unseen':
-        return Error.objects(project=selected_project, seen__ne=True, hidden__ne=True)
-    elif show == 'mine':
-        return Error.objects(claimedby=user)
-    elif show == 'unclaimed':
-        return Error.objects(claimedby__exists=False)
-
 
 @view_config(route_name='error_list', permission='authenticated')
 def list(request):
@@ -34,7 +19,7 @@ def list(request):
 
     show = request.params.get('show', 'unseen')
     try:
-        errors = get_filter(selected_project, request.user, show)
+        errors = Error.objects.find_for_list(selected_project, request.user, show)
     except:
         errors = []
 
@@ -43,7 +28,7 @@ def list(request):
         'selected_project': selected_project,
         'available_projects': available_projects,
         'show': show,
-        'get_error_count': lambda x: get_filter(selected_project, request.user, x).count()
+        'get_error_count': lambda x: Error.objects.find_for_list(selected_project, request.user, x).count()
     }
 
     return render_to_response('error-list.html', params)

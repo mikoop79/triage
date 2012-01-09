@@ -4,7 +4,7 @@ import mongoengine
 from mongoengine.queryset import DoesNotExist
 from models import ErrorInstance, Error
 import logging
-from helpers import handle_msg
+
 # config
 ZMQ_URI = "tcp://0.0.0.0:5001"
 MONGO_URI = "mongodb://lcawood.vm"
@@ -31,6 +31,7 @@ while True:
     for msg in unpacker:
         if type(msg) == dict:
             try:
-                handle_msg(msg)
+                error = Error.create_from_msg(msg)
+                error.save()
             except Exception, a:
                 logging.exception('Failed to process error')

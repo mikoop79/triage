@@ -32,23 +32,16 @@ def user_register_validator(form, values):
 
 
 class CommentsSchema(MappingSchema):
-
     comment = SchemaNode(String(), description='Your comment', widget=TextAreaWidget())
 
 
 class UserLoginSchema(MappingSchema):
-
     email = SchemaNode(String(), description='Enter your email address', validator=Email())
-
     password = SchemaNode(String(), description='Enter your password', widget=PasswordWidget())
 
 
 class UserRegisterSchema(MappingSchema):
-
     name = SchemaNode(String(), descriprtion='Enter your name')
-
     email = SchemaNode(String(), description='Enter your email address', validator=Email())
-
     password = SchemaNode(String(), description='Enter your password', widget=PasswordWidget())
-
     confirm_password = SchemaNode(String(), description='Confirm your password', widget=PasswordWidget())

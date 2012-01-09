@@ -1,7 +1,6 @@
 from pyramid.config import Configurator
 import pymongo
 
-from triage.routes import configure_routes
 from triage import settings as app_settings
 
 from pyramid_beaker import session_factory_from_settings
@@ -49,7 +48,7 @@ def main(global_config, **settings):
     config.scan('triage.subscribers')
 
     #routes
-    configure_routes(config)
+    config.include('triage.routes.routes')
 
     #mongoengine
     mongoengine.connect(settings['mongodb.db_name'], host=settings['mongodb.host'])
