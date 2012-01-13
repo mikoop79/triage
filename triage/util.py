@@ -34,3 +34,6 @@ class Paginator:
 
     def has_next(self):
         return self.current_page < self.get_num_pages
+
+    def get_current_page_number(self):
+        return self.current_page

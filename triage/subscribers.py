@@ -39,6 +39,19 @@ def add_param_adder(event):
     def test(params):
         params = params or {}
         for k in request.GET:
-            params[k] = request.GET[k]
-        return urlencode(params)
+            if k not in params:
+                params[k] = request.GET[k]
+        return request.current_route_url() + "?" + urlencode(params)
     event['append_param'] = test
+
+# Adds a remove_param method to template context to remove values from GET parameters
+@subscriber(BeforeRender)
+def add_param_remove(event):
+    request = event.get('request') or threadlocal.get_current_request()
+    def test(params):
+        params = params or {}
+        for k in params:
+            if k in request.GET:
+                del request.GET[k]
+        return request.current_route_url() + "?" + urlencode(params)
+    event['remove_param'] = test
