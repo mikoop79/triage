@@ -1,5 +1,10 @@
 import re
-import md5
+
+try:
+  from hashlib import md5
+except:
+  from md5 import new as md5
+
 from time import time
 from mongoengine import *
 from mongoengine.queryset import DoesNotExist, QuerySet
@@ -13,7 +18,7 @@ def error_hash(identity):
     hash = ''
     for key in identity:
         hash = hash + key + ":" + str(identity[key])
-    return md5.new(hash).hexdigest()
+    return md5(hash).hexdigest()
 
 
 class User(Document):
