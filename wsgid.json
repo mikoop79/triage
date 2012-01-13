@@ -1,0 +1,7 @@
+{
+  "workers": 4,
+  "keep_alive": "True",
+  "recv": "tcp://127.0.0.1:5002",
+  "send": "tcp://127.0.0.1:5003",
+  "wsgi-app": "entrypoint.application"
+}
