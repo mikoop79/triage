@@ -5,7 +5,7 @@ import logging
 
 # config
 ZMQ_URI = "tcp://0.0.0.0:5001"
-MONGO_URI = "mongodb://lcawood.vm"
+MONGO_URI = "mongodb://0.0.0.0"
 MONGO_DB = "logs"
 
 # zero mq
@@ -15,7 +15,7 @@ socket.bind(ZMQ_URI)
 socket.setsockopt(zmq.SUBSCRIBE, '')
 
 # mongo
-mongoengine.connect('logs', host='lcawood.vm')
+mongoengine.connect('logs', host='0.0.0.0')
 
 # messagepack
 unpacker = msgpack.Unpacker()
