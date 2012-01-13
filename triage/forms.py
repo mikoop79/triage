@@ -1,13 +1,17 @@
 from colander import MappingSchema, SchemaNode
 from colander import String, Email
 from colander import Invalid
-from deform.widget import PasswordWidget, TextAreaWidget
+from deform.widget import PasswordWidget, TextAreaWidget, TextInputWidget
 from triage.models import User
-
+from passlib.apps import custom_app_context as pwd_context
+from colander import Invalid
 
 def user_login_validator(form, values):
     try:
-        User.objects.get(email=values['email'])
+        user = User.objects.get(email=values['email'])
+
+        if (not pwd_context.verify(values['password'], user.password)):
+            raise exception
     except:
         exception = Invalid(form, 'There was a problem with your submission')
         exception['email'] = 'Your Email or Password is incorrect'
@@ -45,3 +49,7 @@ class UserRegisterSchema(MappingSchema):
     email = SchemaNode(String(), description='Enter your email address', validator=Email())
     password = SchemaNode(String(), description='Enter your password', widget=PasswordWidget())
     confirm_password = SchemaNode(String(), description='Confirm your password', widget=PasswordWidget())
+
+
+class TagSchema(MappingSchema):
+    tag = SchemaNode(String(), description='Enter a descriptive tag', widget=TextInputWidget())

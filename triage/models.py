@@ -8,7 +8,7 @@ except:
 from time import time
 from mongoengine import *
 from mongoengine.queryset import DoesNotExist, QuerySet
-
+from passlib.apps import custom_app_context as pwd_context
 
 digit_re = re.compile('\d')
 hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
@@ -26,6 +26,15 @@ class User(Document):
     email = EmailField(required=True)
     password = StringField(required=True)
     created = IntField(required=True)
+
+    @classmethod
+    def from_data(cls, data):
+        return cls(
+                name=data['name'],
+                email=data['email'],
+                password=pwd_context.encrypt(data['password']),
+                created=int(time())
+            )
 
 
 class Comment(EmbeddedDocument):
@@ -78,7 +87,7 @@ class ErrorQuerySet(QuerySet):
 
 
 class Error(Document):
-    meta = { 'queryset_class': ErrorQuerySet }
+    meta = {'queryset_class': ErrorQuerySet}
 
     hash = StringField(required=True)
     project = StringField(required=True)
@@ -102,7 +111,7 @@ class Error(Document):
             error = cls.objects.get(hash=new.get_hash())
             error.update_from_instance(new)
         except DoesNotExist:
-            error = cls.from_instance(new)
+            error = cls.create_from_instance(new)
         return error
 
     @classmethod
@@ -124,4 +133,3 @@ class Error(Document):
         self.timelatest = new.timecreated
         self.count = self.count + 1
         self.instances.append(new)
-

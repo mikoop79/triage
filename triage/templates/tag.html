@@ -1,0 +1,48 @@
+{% extends "layout/fluid.html" %}
+{% block navigation %}{% endblock %}
+{% block content %}
+
+<h5>Tagged As {{ tag }}</h5>
+
+<div id="information">
+
+	<table class="bordered-table zebra-striped" data-tablesort="true">
+
+		<thead>
+			<tr>
+				<!-- <th></th> -->
+				<th>Occurrences</th>
+				<th>Type</th>
+				<th>Latest Message</th>
+				<th>Time (newest - oldest)</th>
+				<th>Tags</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for error in errors %}
+				<tr>
+					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
+					<td>{{ error.count|int }}</td>
+					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}">{{ error.type }}</a></td>
+					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">{{ error.message|truncate(length=130) }}</a></td>
+					<td>
+						<span data-timeago="{{ error.timefirst }}"></span> -
+						<span data-timeago="{{ error.timelatest }}"></span>
+					</td>
+					<td>
+						{% if error.tags %}
+							{% for t in error.tags %}
+								<a href="{{route_url('tag_view', project=selected_project.id, tag=t)}}"><span class="label {{t.lower()}}">{{t}}</span></a>
+							{% endfor %}
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+
+	</table>
+
+</div>
+
+{% endblock %}

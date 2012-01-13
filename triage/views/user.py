@@ -33,12 +33,10 @@ def login(request):
             except DoesNotExist:
                 return HTTPNotFound()
 
-            if (user.password == values['password']):
-                headers = remember(request, str(user.id))
-                return HTTPFound(location='/', headers=headers)
-
-        except ValidationFailure, e:
-            form_render = e.render()
+            headers = remember(request, str(user.id))
+            return HTTPFound(location='/', headers=headers)
+        except ValidationFailure:
+            form_render = form.render()
     else:
         form_render = form.render()
 
@@ -65,12 +63,7 @@ def register(request):
         try:
             values = form.validate(controls)
 
-            user = User(
-                name=values['name'],
-                email=values['email'],
-                password=values['password'],
-                created=int(time())
-            )
+            user = User.from_data(values)
             user.save()
 
             headers = remember(request, str(user.id))
