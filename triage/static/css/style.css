@@ -278,3 +278,46 @@ body {
 #comments .comment:last-child {
 	border-bottom: none;
 }
+
+/*	Paginator
+	------------------------------------------------------------ */
+
+.paginator {
+	text-align: center;
+}
+
+.paginator, .paginator li { list-style-type: none; padding: 0; margin: 0; }
+
+.paginator li {
+	vertical-align: top;
+	display: -moz-inline-stack;
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+
+	background: #F9F9F9;
+	border-top: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+} .paginator li:first-child {
+	border-left: 1px solid #DDD;
+} .paginator li:last-child {
+	border-right: 1px solid #DDD;
+}
+
+.paginator li.current {
+
+}
+
+.paginator li a {
+	display: block;
+	color: #000000;
+	padding: 10px 15px 10px 15px;
+}
+
+.paginator li a:hover {
+	background: #DDDDDD;
+}
+
+.paginator li.current a {
+	background: #DDDDDD;
+}
