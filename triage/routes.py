@@ -1,6 +1,5 @@
-
 def routes(config):
-	# Index
+    # Index
     config.add_route('index', '/')
     # Errors
     config.add_route('error_list', '/projects/{project}')

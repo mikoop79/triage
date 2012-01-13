@@ -97,7 +97,7 @@ class Error(Document):
             error = cls.objects.get(hash=new.get_hash())
             error.update_from_instance(new)
         except DoesNotExist:
-            error = cls.from_instance(new)
+            error = cls.create_from_instance(new)
         return error
 
     @classmethod
