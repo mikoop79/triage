@@ -1,17 +1,23 @@
 <ul class="paginator">
 
-	{% if paginator.has_prev() %}
-		<li><a href="{{append_param({'page': paginator.get_first()})}}">&lt;&lt;</a></li>
-		<li><a href="{{append_param({'page': paginator.get_current_page_number() - 1})}}">&lt;</a></li>
-	{% endif %}
-
-	{% for number in range(0, paginator.get_num_pages()) %}
-		<li><a href="{{append_param({'page': number + 1})}}">{{ number + 1 }}</a></li>
-	{% endfor %}
-
-	{% if paginator.has_next() %}
-		<li><a href="{{append_param({'page': paginator.get_current_page_number() + 1})}}">&gt;</a></li>
-		<li><a href="{{append_param({'page': paginator.get_last()})}}">&gt;&gt;</a></li>
-	{% endif %}
+	{% if paginator.has_prev() -%}
+		<li
+			><a href="{{set_params({'page': paginator.get_first()})}}">&lt;&lt;</a
+		></li
+		><li
+			><a href="{{set_params({'page': paginator.get_current_page_number() - 1})}}">&lt;</a
+		></li>
+	{%- endif %}{% for number in range(0, paginator.get_num_pages()) -%}
+		<li class="{% if number == (paginator.get_current_page_number() - 1) %}active{% else %}inactive{% endif %}"
+			><a href="{{set_params({'page': number + 1})}}">{{ number + 1 }}</a
+		></li>
+	{%- endfor %}{% if paginator.has_next() -%}
+		<li
+			><a href="{{set_params({'page': paginator.get_current_page_number() + 1})}}">&gt;</a
+		></li
+		><li
+			><a href="{{set_params({'page': paginator.get_last()})}}">&gt;&gt;</a
+		></li>
+	{%- endif %}
 
 </ul>

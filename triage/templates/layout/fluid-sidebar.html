@@ -9,20 +9,12 @@
 
 			{% block sidebar %}
 				<h5>Tags</h5>
-				<ul>
-					<li><a href="{{append_param({'tag': 'Default'})}}">Default</a></li>
-					<li><a href="{{append_param({'tag': 'New'})}}">New</a></li>
-					<li><a href="{{append_param({'tag': 'Warning'})}}">Warning</a></li>
-					<li><a href="{{append_param({'tag': 'Important'})}}">Important</a></li>
-					<li><a href="{{append_param({'tag': 'Notice'})}}">Notice</a></li>
-				</ul>
-
-				<h5>Time</h5>
-				<ul>
-					<li><a href="#">1 week ago</a></li>
-					<li><a href="#">2 weeks ago</a></li>
-					<li><a href="#">1 month ago</a></li>
-					<li><a href="#">1 year ago</a></li>
+				<ul class="tag-list">
+					<li class="{{ has_param({'tag': 'Default'}) }}"><a href="{{set_params({'tag': 'Default'})}}">Default</a></li>
+					<li class="{{ has_param({'tag': 'New'}) }}"><a href="{{set_params({'tag': 'New'})}}">New</a></li>
+					<li class="{{ has_param({'tag': 'Warning'}) }}"><a href="{{set_params({'tag': 'Warning'})}}">Warning</a></li>
+					<li class="{{ has_param({'tag': 'Important'}) }}"><a href="{{set_params({'tag': 'Important'})}}">Important</a></li>
+					<li class="{{ has_param({'tag': 'Notice'}) }}"><a href="{{set_params({'tag': 'Notice'})}}">Notice</a></li>
 				</ul>
 			{% endblock %}
 

@@ -304,20 +304,44 @@ body {
 	border-right: 1px solid #DDD;
 }
 
-.paginator li.current {
+.paginator li.active {
 
 }
 
 .paginator li a {
 	display: block;
 	color: #000000;
-	padding: 10px 15px 10px 15px;
+	padding: 5px 10px 5px 10px;
 }
 
 .paginator li a:hover {
 	background: #DDDDDD;
 }
 
-.paginator li.current a {
+.paginator li.active a {
+	background: #DDDDDD;
+}
+
+/*	Tag List
+	------------------------------------------------------------ */
+
+.tag-list {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	border: 1px solid #DDDDDD;
+	background: #FFFFFF;
+}
+
+.tag-list, .tag-list li { list-style-type: none; padding: 0; margin: 0; }
+
+.tag-list li a {
+	display: block;
+	padding-left: 10px;
+	height: 25px;
+	line-height: 25px;
+}  .tag-list li a:hover {
+	background: #DDDDDD;
+}  .tag-list li.active a {
 	background: #DDDDDD;
 }

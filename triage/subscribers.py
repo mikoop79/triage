@@ -34,24 +34,28 @@ def add_user_to_request(event):
 
 # Adds an append_param method to template context to insert values into url GET parameters
 @subscriber(BeforeRender)
-def add_param_adder(event):
+def add_set_params(event):
     request = event.get('request') or threadlocal.get_current_request()
+
     def test(params):
         params = params or {}
         for k in request.GET:
             if k not in params:
                 params[k] = request.GET[k]
         return request.current_route_url() + "?" + urlencode(params)
-    event['append_param'] = test
+    event['set_params'] = test
 
-# Adds a remove_param method to template context to remove values from GET parameters
+
 @subscriber(BeforeRender)
-def add_param_remove(event):
+def add_has_param(event):
     request = event.get('request') or threadlocal.get_current_request()
+
     def test(params):
+        value = 'inactive'
         params = params or {}
-        for k in params:
-            if k in request.GET:
-                del request.GET[k]
-        return request.current_route_url() + "?" + urlencode(params)
-    event['remove_param'] = test
+        for k in request.GET:
+            if k in params and params[k] == request.GET[k]:
+                value = 'active'
+        return value
+
+    event['has_param'] = test
