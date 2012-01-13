@@ -2,28 +2,33 @@ import zmq
 import msgpack
 import mongoengine
 import logging
+from sys import argv
+from pyramid.paster import get_appsettings
+
+#logging
+logging.basicConfig(level=logging.DEBUG)
 
 # config
+logging.info('Loading configuration')
 ZMQ_URI = "tcp://0.0.0.0:5001"
-MONGO_URI = "mongodb://0.0.0.0"
-MONGO_DB = "logs"
+settings = get_appsettings(argv[1], 'triage')
 
 # zero mq
+logging.info('Initializing zeromq socket at: ' + ZMQ_URI)
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
 socket.bind(ZMQ_URI)
 socket.setsockopt(zmq.SUBSCRIBE, '')
 
 # mongo
-mongoengine.connect('logs', host='0.0.0.0')
+logging.info('Connecting to mongo at: mongodb://' + settings['mongodb.host']+'/'+settings['mongodb.db_name'])
+mongoengine.connect(settings['mongodb.db_name'], host=settings['mongodb.host'])
 
 # messagepack
 unpacker = msgpack.Unpacker()
 
-#logging
-logging.basicConfig(level=logging.DEBUG)
-
 # serve!
+logging.info('Serving!')
 while True:
     unpacker.feed(socket.recv())
     for msg in unpacker:
