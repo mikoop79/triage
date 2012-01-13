@@ -93,11 +93,50 @@ body {
 	border: 1px solid #DDDDDD;
 }
 
-/*	Container
+/*	Sidebar Form
 	------------------------------------------------------------ */
+
+.sidebar form ul, .sidebar form li { list-style-type: none; padding: 0; margin: 0; }
 
 .sidebar input {
 	width: 170px;
+}
+
+.sidebar label {
+	display: block;
+	float: none;
+	text-align: left;
+	font-weight: bold;
+}
+
+.sidebar label span {
+	display: none;
+}
+
+.sidebar form .buttons {
+	margin-top: 5px;
+	background: #F5F5F5;
+	border-radius: 0 0 4px 4px;
+	text-align: right;
+}
+
+.sidebar form .buttons .submit {
+    padding: 5px 14px 6px;
+    background-color: #0064CD;
+    background-image: -moz-linear-gradient(top, #049CDB, #0064CD);
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #049CDB),color-stop(1, #0064CD));
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.sidebar form .buttons .submit:hover {
+	background-image: -moz-linear-gradient(top, #0064CD, #049CDB);
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #0064CD),color-stop(1, #049CDB));
 }
 
 /*	Error

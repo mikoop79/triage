@@ -51,7 +51,7 @@ def view(request):
     if 'submit' in request.POST:
         form_id = request.POST['__formid__']
         controls = request.POST.items()
-        
+
         if form_id == 'comment_form':
             try:
                 values = comment_form.validate(controls)
@@ -140,9 +140,13 @@ def toggle_hide(request):
 @view_config(route_name='tag_view', permission='authenticated')
 def tag_view(request):
     tag = request.matchdict['tag']
-
     selected_project = get_selected_project(request)
-    errors = Error.objects(project=selected_project['id'], tags=tag)
+
+    try:
+        errors = Error.objects(project=selected_project['id'], tags=tag)
+    except:
+        return HTTPNotFound()
+
     params = {
         'tag': tag,
         'errors': errors,

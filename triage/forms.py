@@ -48,4 +48,4 @@ class UserRegisterSchema(MappingSchema):
 
 
 class TagSchema(MappingSchema):
-    tag = SchemaNode(String(), description='Your tag', widget=TextInputWidget())
+    tag = SchemaNode(String(), description='Enter a descriptive tag', widget=TextInputWidget())
