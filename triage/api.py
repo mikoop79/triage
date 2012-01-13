@@ -4,9 +4,11 @@ import mongoengine
 import logging
 from sys import argv
 from pyramid.paster import get_appsettings
+from models import Error
 
 #logging
 logging.basicConfig(level=logging.DEBUG)
+
 
 # config
 logging.info('Loading configuration')
@@ -21,7 +23,7 @@ socket.bind(ZMQ_URI)
 socket.setsockopt(zmq.SUBSCRIBE, '')
 
 # mongo
-logging.info('Connecting to mongo at: mongodb://' + settings['mongodb.host']+'/'+settings['mongodb.db_name'])
+logging.info('Connecting to mongo at: mongodb://' + settings['mongodb.host'] + '/' + settings['mongodb.db_name'])
 mongoengine.connect(settings['mongodb.db_name'], host=settings['mongodb.host'])
 
 # messagepack
