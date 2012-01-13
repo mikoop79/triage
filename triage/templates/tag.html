@@ -14,8 +14,8 @@
 				<th>Occurrences</th>
 				<th>Type</th>
 				<th>Latest Message</th>
-				<!-- <th>Tags</th> -->
 				<th>Time (newest - oldest)</th>
+				<th>Tags</th>
 			</tr>
 		</thead>
 
@@ -27,15 +27,15 @@
 					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}">{{ error.type }}</a></td>
 					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">{{ error.message|truncate(length=130) }}</a></td>
 					<td>
+						<span data-timeago="{{ error.timefirst }}"></span> -
+						<span data-timeago="{{ error.timelatest }}"></span>
+					</td>
+					<td>
 						{% if error.tags %}
 							{% for t in error.tags %}
 								<a href="{{route_url('tag_view', project=selected_project.id, tag=t)}}"><span class="label {{t.lower()}}">{{t}}</span></a>
 							{% endfor %}
 						{% endif %}
-					</td>
-					<td>
-						<span data-timeago="{{ error.timefirst }}"></span> -
-						<span data-timeago="{{ error.timelatest }}"></span>
 					</td>
 				</tr>
 			{% endfor %}

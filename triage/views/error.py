@@ -16,6 +16,7 @@ def list(request):
     selected_project = get_selected_project(request)
 
     show = request.params.get('show', 'unseen')
+
     try:
         errors = Error.objects.find_for_list(selected_project, request.user, show)
     except:
@@ -32,7 +33,7 @@ def list(request):
         'show': show,
         'get_error_count': lambda x: Error.objects.find_for_list(selected_project, request.user, x).count()
     }
-
+    
     return render_to_response('error-list.html', params)
 
 

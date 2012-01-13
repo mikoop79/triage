@@ -2,6 +2,7 @@ from pyramid import threadlocal
 from pyramid.security import authenticated_userid
 from pyramid.events import BeforeRender, ContextFound, subscriber
 from triage.models import User
+from urllib import urlencode
 
 
 # Adds route_url method to the top level of the template context
@@ -29,3 +30,15 @@ def add_user_to_request(event):
     userid = authenticated_userid(request)
     if (userid):
         request.user = User.objects().with_id(userid)
+
+
+# Adds an append_param method to template context to insert values into url GET parameters
+@subscriber(BeforeRender)
+def add_param_adder(event):
+    request = event.get('request') or threadlocal.get_current_request()
+    def test(params):
+        params = params or {}
+        for k in request.GET:
+            params[k] = request.GET[k]
+        return urlencode(params)
+    event['append_param'] = test
