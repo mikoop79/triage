@@ -1,7 +1,7 @@
 from colander import MappingSchema, SchemaNode
 from colander import String, Email
 from colander import Invalid
-from deform.widget import PasswordWidget, TextAreaWidget
+from deform.widget import PasswordWidget, TextAreaWidget, TextInputWidget
 from triage.models import User
 
 
@@ -45,3 +45,7 @@ class UserRegisterSchema(MappingSchema):
     email = SchemaNode(String(), description='Enter your email address', validator=Email())
     password = SchemaNode(String(), description='Enter your password', widget=PasswordWidget())
     confirm_password = SchemaNode(String(), description='Confirm your password', widget=PasswordWidget())
+
+
+class TagSchema(MappingSchema):
+    tag = SchemaNode(String(), description='Your tag', widget=TextInputWidget())

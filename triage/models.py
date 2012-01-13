@@ -73,7 +73,7 @@ class ErrorQuerySet(QuerySet):
 
 
 class Error(Document):
-    meta = { 'queryset_class': ErrorQuerySet }
+    meta = {'queryset_class': ErrorQuerySet}
 
     hash = StringField(required=True)
     project = StringField(required=True)
@@ -119,4 +119,3 @@ class Error(Document):
         self.timelatest = new.timecreated
         self.count = self.count + 1
         self.instances.append(new)
-

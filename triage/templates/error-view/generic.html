@@ -12,6 +12,18 @@
 		{% endfor %}
 	</dl>
 
+	<h5>Tags</h5>
+	<div>
+		{% if error.tags %}
+			{% for tag in error.tags %}
+				<a href="{{route_url('tag_view', project=selected_project.id, tag=tag)}}"><span class="label {{tag.lower()}}">{{tag}}</span></a>
+			{% endfor %}
+		{% endif %}
+
+		{% if user and tag_form %}
+			{{ tag_form }}
+		{% endif %}
+	</div>
 {% endblock %}
 
 {% block content %}
@@ -130,8 +142,8 @@
 
 	</table>
 
-	{% if form and user %}
-		{{ form }}
+	{% if user and comment_form %}
+		{{ comment_form }}
 	{% endif %}
 
 	{% if error.comments %}

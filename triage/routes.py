@@ -12,3 +12,5 @@ def routes(config):
     config.add_route('user_login', 'user/login')
     config.add_route('user_register', 'user/register')
     config.add_route('user_logout', 'user/logout')
+    # tags
+    config.add_route('tag_view', '/projects/{project}/tag/{tag}')

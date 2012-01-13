@@ -4,10 +4,9 @@ from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from jinja2 import Markup
 
 from triage.models import Error, Comment
-from triage.forms import CommentsSchema
+from triage.forms import CommentsSchema, TagSchema
 from deform import Form, ValidationFailure
 from time import time
-
 
 
 @view_config(route_name='error_list', permission='authenticated')
@@ -43,28 +42,47 @@ def view(request):
     except:
         return HTTPNotFound()
 
-    schema = CommentsSchema()
-    form = Form(schema, buttons=('submit',))
+    comment_schema = CommentsSchema()
+    comment_form = Form(comment_schema, buttons=('submit',), formid="comment_form")
+
+    tag_schema = TagSchema()
+    tag_form = Form(tag_schema, buttons=('submit',), formid="tag_form")
 
     if 'submit' in request.POST:
+        form_id = request.POST['__formid__']
         controls = request.POST.items()
+        
+        if form_id == 'comment_form':
+            try:
+                values = comment_form.validate(controls)
 
-        try:
-            values = form.validate(controls)
+                error.comments.append(Comment(
+                    author=request.user,
+                    content=values['comment'],
+                    created=int(time())
+                ))
+                error.save()
 
-            error.comments.append(Comment(
-                author=request.user,
-                content=values['comment'],
-                created=int(time())
-            ))
-            error.save()
+                url = request.route_url('error_view', project=selected_project['id'], id=error_id)
+                return HTTPFound(location=url)
+            except ValidationFailure, e:
+                comment_form_render = e.render()
+        elif form_id == 'tag_form':
+            try:
+                values = tag_form.validate(controls)
 
-            url = request.route_url('error_view', project=selected_project['id'], id=error_id)
-            return HTTPFound(location=url)
-        except ValidationFailure, e:
-            form_render = e.render()
+                # build a list of comma seperated, non empty tags
+                tags = [t.strip() for t in values['tag'].split(',') if t.strip() != '']
+                error.tags.extend(tags)
+                error.save()
+
+                url = request.route_url('error_view', project=selected_project['id'], id=error_id)
+                return HTTPFound(location=url)
+            except ValidationFailure, e:
+                tag_form_render = e.render()
     else:
-        form_render = form.render()
+        comment_form_render = comment_form.render()
+        tag_form_render = tag_form.render()
 
     error.seen = True
     error.save()
@@ -75,7 +93,8 @@ def view(request):
         'other_errors': error.instances,
         'selected_project': selected_project,
         'available_projects': available_projects,
-        'form': Markup(form_render),
+        'comment_form': Markup(comment_form_render),
+        'tag_form': Markup(tag_form_render),
     }
 
     try:
@@ -116,6 +135,21 @@ def toggle_hide(request):
         return HTTPFound(location=url)
     except:
         return HTTPNotFound()
+
+
+@view_config(route_name='tag_view', permission='authenticated')
+def tag_view(request):
+    tag = request.matchdict['tag']
+
+    selected_project = get_selected_project(request)
+    errors = Error.objects(project=selected_project['id'], tags=tag)
+    params = {
+        'tag': tag,
+        'errors': errors,
+        'selected_project': selected_project,
+    }
+
+    return render_to_response('tag.html', params)
 
 
 def get_selected_project(request):
