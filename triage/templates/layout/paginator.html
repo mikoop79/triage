@@ -1,0 +1,17 @@
+<ul class="paginator">
+
+	{% if paginator.has_prev() %}
+		<li><a href=""><<</a></li>
+		<li><a href="">></a></li>
+	{% endif %}
+
+	{% for number in range(0, paginator.get_num_pages()) %}
+		<li><a href="">{{ number + 1 }}</a></li>
+	{% endfor %}
+
+	{% if paginator.has_next() %}
+		<li><a href="">></a></li>
+		<li><a href="">>></a></li>
+	{% endif %}
+
+</ul>

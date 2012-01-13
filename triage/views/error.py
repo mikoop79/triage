@@ -3,6 +3,7 @@ from pyramid.renderers import render_to_response
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from jinja2 import Markup
 
+from triage.util import Paginator
 from triage.models import Error, Comment
 from triage.forms import CommentsSchema, TagSchema
 from deform import Form, ValidationFailure
@@ -20,8 +21,12 @@ def list(request):
     except:
         errors = []
 
+    page = request.params.get('page', '1')
+    paginator = Paginator(errors, size_per_page=5, current_page=page)
+
     params = {
-        'errors': errors,
+        'errors': paginator.get_current_page(),
+        'paginator': paginator,
         'selected_project': selected_project,
         'available_projects': available_projects,
         'show': show,
