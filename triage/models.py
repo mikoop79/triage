@@ -3,7 +3,7 @@ import md5
 from time import time
 from mongoengine import *
 from mongoengine.queryset import DoesNotExist, QuerySet
-
+from passlib.apps import custom_app_context as pwd_context
 
 digit_re = re.compile('\d')
 hex_re = re.compile('["\'\s][0-9a-f]+["\'\s]')
@@ -21,6 +21,15 @@ class User(Document):
     email = EmailField(required=True)
     password = StringField(required=True)
     created = IntField(required=True)
+
+    @classmethod
+    def from_data(cls, data):
+        return cls(
+                name=data['name'],
+                email=data['email'],
+                password=pwd_context.encrypt(data['password']),
+                created=int(time())
+            )
 
 
 class Comment(EmbeddedDocument):
