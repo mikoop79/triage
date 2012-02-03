@@ -15,12 +15,10 @@
 
 	<div id="navigation" class="cf">
 		<ul class="pills">
-			<li {% if show == 'unseen' %}class="active"{% endif %}><a href="?show=unseen">New ({{ get_error_count('unseen') }})</a></li>
-			<li {% if show == 'seen' %}class="active"{% endif %}><a href="?show=seen">Viewed ({{ get_error_count('seen') }})</a></li>
-			<li {% if show == 'hidden' %}class="active"{% endif %}><a href="?show=hidden">Hidden ({{ get_error_count('hidden') }})</a></li>
+			<li {% if show == 'all' %}class="active"{% endif %}><a href="?show=all">All ({{ get_error_count('all') }})</a></li>
 			<li {% if show == 'mine' %}class="active"{% endif %}><a href="?show=mine">Mine ({{ get_error_count('mine') }})</a></li>
 			<li {% if show == 'unclaimed' %}class="active"{% endif %}><a href="?show=unclaimed">Unclaimed ({{ get_error_count('unclaimed') }})</a></li>
-			<li {% if show == 'all' %}class="active"{% endif %}><a href="?show=all">All ({{ get_error_count('all') }})</a></li>
+			<li {% if show == 'hidden' %}class="active"{% endif %}><a href="?show=hidden">Hidden ({{ get_error_count('hidden') }})</a></li>			
 		</ul>
 	</div>
 
@@ -31,30 +29,33 @@
 
 <div id="information">
 
-	<table class="bordered-table zebra-striped" data-tablesort="true">
+	<table class="bordered-table zebra-striped">
 
 		<thead>
 			<tr>
 				<!-- <th></th> -->
-				<th>Occurrences</th>
-				<th>Type</th>
+				<th></th>
 				<th>Latest Message</th>
-				<th>Time (newest - oldest)</th>
+				<th>Type</th>
+				<th>First seen</th>				
+				<th>Last seen</th>
 				<th>Tags</th>
 			</tr>
 		</thead>
 
 		<tbody>
 			{% for error in errors %}
-				<tr>
+				<tr class="{{error.get_row_classes(user)}}">
 					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
 					<td>{{ error.count|int }}</td>
-					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}">{{ error.type }}</a></td>
-					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">{{ error.message|truncate(length=130) }}</a></td>
+					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">{{ error.message|truncate(length=130) }}</a></td>					
+					<td>{{ error.type }}</td>
 					<td>
-						<span data-timeago="{{ error.timefirst }}"></span> -
-						<span data-timeago="{{ error.timelatest }}"></span>
+						<span data-timeago="{{ error.timefirst }}"></span>
 					</td>
+					<td>
+						<span data-timeago="{{ error.timelatest }}"></span>
+					</td>					
 					<td>
 						{% if error.tags %}
 							{% for tag in error.tags %}

@@ -345,3 +345,13 @@ body {
 }  .tag-list li.active a {
 	background: #DDDDDD;
 }
+
+
+/*	Error List
+	------------------------------------------------------------ */
+#information tr.unseen td {
+	background-color: #fffaf0;
+	font-weight:500;
+}
+
+

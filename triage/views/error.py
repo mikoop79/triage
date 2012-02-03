@@ -15,7 +15,7 @@ def list(request):
     available_projects = request.registry.settings['projects']
     selected_project = get_selected_project(request)
 
-    show = request.params.get('show', 'unseen')
+    show = request.params.get('show', 'all')
     try:
         errors = Error.objects.find_for_list(selected_project, request.user, show)
     except:
@@ -26,7 +26,7 @@ def list(request):
         errors.filter(tags=tag)
 
     page = request.params.get('page', '1')
-    paginator = Paginator(errors, size_per_page=5, current_page=page)
+    paginator = Paginator(errors, size_per_page=20, current_page=page)
 
     params = {
         'errors': paginator.get_current_page(),

@@ -73,7 +73,7 @@ class ErrorQuerySet(QuerySet):
     def find_for_list(self, project, user, show):
         selected_project = project['id']
         if show == 'all':
-            return self.filter(project=selected_project)
+            return self.filter(project=selected_project, hidden__ne=True)
         elif show == 'hidden':
             return self.filter(project=selected_project, hidden=True)
         elif show == 'seen':
@@ -81,13 +81,16 @@ class ErrorQuerySet(QuerySet):
         elif show == 'unseen':
             return self.filter(project=selected_project, seen__ne=True, hidden__ne=True)
         elif show == 'mine':
-            return self.filter(project=selected_project, claimedby=user)
+            return self.filter(project=selected_project, claimedby=user, hidden__ne=True)
         elif show == 'unclaimed':
-            return self.filter(project=selected_project, claimedby__exists=False)
+            return self.filter(project=selected_project, claimedby__exists=False, hidden__ne=True)
 
 
 class Error(Document):
-    meta = {'queryset_class': ErrorQuerySet}
+    meta = {
+        'queryset_class': ErrorQuerySet,
+        'ordering' : ['-timelatest']
+    }
 
     hash = StringField(required=True)
     project = StringField(required=True)
@@ -101,8 +104,8 @@ class Error(Document):
     tags = ListField(StringField(max_length=30))
     comments = ListField(EmbeddedDocumentField(Comment))
     instances = ListField(EmbeddedDocumentField(ErrorInstance))
-    seen = BooleanField()
-    hidden = BooleanField()
+    seen = BooleanField(default=False)
+    hidden = BooleanField(default=False)
 
     @classmethod
     def create_from_msg(cls, msg):
@@ -132,4 +135,15 @@ class Error(Document):
         self.message = new.message
         self.timelatest = new.timecreated
         self.count = self.count + 1
+        self.hidden = False
         self.instances.append(new)
+
+    def get_row_classes(self, user):
+        classes = []
+        not (self.seen) and classes.append('unseen')
+        self.seen and classes.append('seen')
+        self.hidden and classes.append('hidden')
+        self.claimedby == user and classes.append('mine')
+        return ' '.join(classes)
+
+
