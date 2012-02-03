@@ -27,7 +27,6 @@ pyramid-mongodb==1.0
 pyzmq==2.1.10
 repoze.lru==0.4
 translationstring==0.4
--e git+git@github.com:lwc/triage.git@b8a16ac996e4225677b19724ccfd6a2ee6f20df1#egg=triage-dev
 venusian==1.0a2
 wsgiref==0.1.2
 yolk==0.4.1
