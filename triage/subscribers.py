@@ -5,6 +5,7 @@ from triage.models import User
 from urllib import urlencode
 from webob.multidict import MultiDict
 
+
 # Adds route_url method to the top level of the template context
 @subscriber(BeforeRender)
 def add_route_url(event):
@@ -75,16 +76,16 @@ def add_set_params(event):
         return request.current_route_url() + "?" + urlencode(params)
     event['set_params'] = test
 
+
 @subscriber(BeforeRender)
 def add_switch(event):
-    request = event.get('request') or threadlocal.get_current_request()
-
     def test(condition, true='active', false='inactive'):
         if condition:
             return true
         return false
 
     event['switch'] = test
+
 
 @subscriber(BeforeRender)
 def add_has_param(event):

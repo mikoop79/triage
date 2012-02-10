@@ -56,7 +56,15 @@
 				<tr class="{{error.get_row_classes(user)}}">
 					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
 					<td>{{ error.count|int }}</td>
-					<td><a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">{{ error.message|truncate(length=130) }}</a></td>
+					<td>
+						<a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">
+							{% if error.message %}
+								{{ error.message|truncate(length=130) }}
+							{% else %}
+								An unknown error has occurred
+							{% endif %}
+						</a>
+					</td>
 					<td>{{ error.type }}</td>
 					<td>
 						<span data-timeago="{{ error.timefirst }}"></span>
@@ -67,7 +75,7 @@
 					<td>
 						{% if error.tags %}
 							{% for tag in error.tags %}
-								<a href="{{ set_params({'tags': tag}, toggle=True) }}"><span class="label">{{ tag }}</span></a>
+								<a class="label" href="{{ toggle_param(tags=tag) }}">{{ tag }}</a>
 							{% endfor %}
 						{% endif %}
 					</td>

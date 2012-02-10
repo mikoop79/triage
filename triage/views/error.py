@@ -23,6 +23,8 @@ def list(request):
     if tags:
         errors.filter(tags__in=tags)
 
+    tags = Tag.objects().order_by('-count')
+
     order_by = request.params.get('order', False)
     direction = request.params.get('direction', False)
     if order_by != False and errors.count():
@@ -39,6 +41,7 @@ def list(request):
         'selected_project': selected_project,
         'available_projects': available_projects,
         'show': show,
+        'tags': tags,
         'get_error_count': lambda x: Error.objects.find_for_list(selected_project, request.user, x).count()
     }
 

@@ -8,24 +8,18 @@
 		<div class="well">
 
 			{% block sidebar %}
-				<h5>Tags</h5>
-				<ul class="tag-list">
-					<li class="{{ switch(has_param(tags='Default')) }}">
-						<a href="{{ toggle_param(tags='Default') }}">Default</a>
-					</li>
-					<li class="{{ switch(has_param(tags='New')) }}">
-						<a href="{{ toggle_param(tags='New') }}">New</a>
-					</li>
-					<li class="{{ switch(has_param(tags='Warning')) }}">
-						<a href="{{ toggle_param(tags='Warning') }}">Warning</a>
-					</li>
-					<li class="{{ switch(has_param(tags='Important')) }}">
-						<a href="{{ toggle_param(tags='Important') }}">Important</a>
-					</li>
-					<li class="{{ switch(has_param(tags='Notice')) }}">
-						<a href="{{ toggle_param(tags='Notice') }}">Notice</a>
-					</li>
-				</ul>
+
+				{% if tags %}
+					<h5>Tags</h5>
+					<ul class="tag-list">
+						{% for tag in tags %}
+							<li class="{{ switch(has_param(tags=tag.tag)) }}">
+								<a href="{{ toggle_param(tags=tag.tag) }}">{{ tag.tag.upper() }}</a>
+							</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+
 			{% endblock %}
 
 		</div>
