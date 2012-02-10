@@ -37,11 +37,18 @@ def add_user_to_request(event):
 def add_set_params(event):
     request = event.get('request') or threadlocal.get_current_request()
 
-    def test(params):
+    def test(params, toggle=False):
         params = params or {}
+
         for k in request.GET:
             if k not in params:
                 params[k] = request.GET[k]
+            else:
+                if params[k] == request.GET[k] and toggle != False:
+                    del(params[k])
+                elif k == 'direction':
+                    params[k] = 'asc' if request.GET[k] != 'asc' else 'desc'
+
         return request.current_route_url() + "?" + urlencode(params)
     event['set_params'] = test
 

@@ -25,6 +25,13 @@ def list(request):
     if tag != False and errors.count():
         errors.filter(tags=tag)
 
+    order_by = request.params.get('order', False)
+    direction = request.params.get('direction', False)
+    if order_by != False and errors.count():
+        if direction and direction == 'desc':
+            order_by = '-' + order_by
+        errors.order_by(order_by)
+
     page = request.params.get('page', '1')
     paginator = Paginator(errors, size_per_page=20, current_page=page)
 
