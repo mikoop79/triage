@@ -16,12 +16,9 @@ def list(request):
     selected_project = get_selected_project(request)
 
     show = request.params.get('show', 'all')
-    try:
-        errors = Error.objects.find_for_list(selected_project, request.user, show)
-    except:
-        errors = []
-
     tags = request.GET.getall('tags')
+
+    errors = Error.objects.find_for_list(selected_project, request.user, show)
 
     if tags:
         errors.filter(tags__in=tags)
