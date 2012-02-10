@@ -153,25 +153,6 @@ def toggle_hide(request):
         return HTTPNotFound()
 
 
-@view_config(route_name='tag_view', permission='authenticated')
-def tag_view(request):
-    tag = request.matchdict['tag']
-    selected_project = get_selected_project(request)
-
-    try:
-        errors = Error.objects(project=selected_project['id'], tags=tag)
-    except:
-        return HTTPNotFound()
-
-    params = {
-        'tag': tag,
-        'errors': errors,
-        'selected_project': selected_project,
-    }
-
-    return render_to_response('tag.html', params)
-
-
 def get_selected_project(request):
     selected_project_key = request.matchdict['project']
     available_projects = request.registry.settings['projects']

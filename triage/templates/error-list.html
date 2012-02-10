@@ -59,7 +59,7 @@
 					<td>
 						{% if error.tags %}
 							{% for tag in error.tags %}
-								<a href="{{route_url('tag_view', project=selected_project.id, tag=tag)}}"><span class="label {{tag.lower()}}">{{tag}}</span></a>
+								<a href="{{ set_params({'tags': tag}, toggle=True) }}"><span class="label">{{ tag }}</span></a>
 							{% endfor %}
 						{% endif %}
 					</td>
