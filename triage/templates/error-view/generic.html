@@ -10,7 +10,7 @@
 	<div class="related-tags">
 		{% if error.tags %}
 			{% for tag in error.tags %}
-				<span class="label">{{tag}}</span>
+				<a href="{{ route_url('error_list', project=selected_project.id) }}?tags={{ tag }}"><span class="label">{{tag}}</span></a>
 			{% endfor %}
 		{% endif %}
 
@@ -23,7 +23,7 @@
 
 	<dl class="related-errors">
 		{% for e in other_errors %}
-			<dt><a href="{{route_url('error_view', project=selected_project.id, id=e._id)}}">{{e.message}}</a></dt>
+			<dt><a href="{{ route_url('error_view', project=selected_project.id, id=e._id) }}">{{e.message}}</a></dt>
 			<dd data-timeago="{{ e.timestamp }}"></dd>
 		{% endfor %}
 	</dl>
@@ -34,19 +34,19 @@
 	{% block toolbar %}
 		<ul id="navigation" class="toolbar cf">
 			{% if error.hidden %}
-				<li><a href="{{route_url('error_toggle_hide', project=selected_project.id, id=error._id)}}">Unhide Error</a></li>
+				<li><a href="{{ route_url('error_toggle_hide', project=selected_project.id, id=error._id) }}">Unhide Error</a></li>
 			{% else %}
-				<li><a href="{{route_url('error_toggle_hide', project=selected_project.id, id=error._id)}}">Hide Error</a></li>
+				<li><a href="{{ route_url('error_toggle_hide', project=selected_project.id, id=error._id) }}">Hide Error</a></li>
 			{% endif %}
 
 			{% if error.claimedby %}
 				{% if user['email'] == error.claimedby['email'] %}
-					<li class="pull-right"><a href="{{route_url('error_toggle_claim', project=selected_project.id, id=error._id)}}">Unclaim Error</a></li>
+					<li class="pull-right"><a href="{{ route_url('error_toggle_claim', project=selected_project.id, id=error._id) }}">Unclaim Error</a></li>
 				{% else %}
 					<li class="pull-right no-link">Claimed by {{ error.claimedby['name'] }}</li>
 				{% endif %}
 			{% else %}
-				<li class="pull-right"><a href="{{route_url('error_toggle_claim', project=selected_project.id, id=error._id)}}">Claim Error</a></li>
+				<li class="pull-right"><a href="{{ route_url('error_toggle_claim', project=selected_project.id, id=error._id) }}">Claim Error</a></li>
 			{% endif %}
 		</ul>
 	{% endblock %}

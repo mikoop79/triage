@@ -14,7 +14,7 @@
 					<ul class="tag-list">
 						{% for tag in tags %}
 							<li class="{{ switch(has_param(tags=tag.tag)) }}">
-								<a href="{{ toggle_param(tags=tag.tag) }}">{{ tag.tag.upper() }}</a>
+								<a href="{{ toggle_param(tags=tag.tag) }}">{{ tag.tag }}</a>
 							</li>
 						{% endfor %}
 					</ul>
