@@ -3,16 +3,10 @@
 
 {% block sidebar %}
 
-	<h5>Related Errors</h5>
+	{% if error.tags %}
+		<h5>Tags</h5>
+	{% endif %}
 
-	<dl class="related-errors">
-		{% for e in other_errors %}
-			<dt><a href="{{route_url('error_view', project=selected_project.id, id=e._id)}}">{{e.message}}</a></dt>
-			<dd data-timeago="{{ e.timestamp }}"></dd>
-		{% endfor %}
-	</dl>
-
-	<h5>Tags</h5>
 	<div class="related-tags">
 		{% if error.tags %}
 			{% for tag in error.tags %}
@@ -24,6 +18,15 @@
 			{{ tag_form }}
 		{% endif %}
 	</div>
+
+	<h5>Related Errors</h5>
+
+	<dl class="related-errors">
+		{% for e in other_errors %}
+			<dt><a href="{{route_url('error_view', project=selected_project.id, id=e._id)}}">{{e.message}}</a></dt>
+			<dd data-timeago="{{ e.timestamp }}"></dd>
+		{% endfor %}
+	</dl>
 {% endblock %}
 
 {% block content %}
