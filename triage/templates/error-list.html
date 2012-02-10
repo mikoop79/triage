@@ -2,7 +2,7 @@
 
 {% block sidebar %}
 
-	<form action="{{route_url('error_list', project=selected_project.id)}}" method="GET">
+	<form action="{{route_url('error_list', project=selected_project.id)}}" method="POST">
 		<input type="text" name="search" placeholder="Search" value="{{ search }}">
 	</form>
 
