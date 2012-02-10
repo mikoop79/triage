@@ -165,8 +165,14 @@ class Error(Document):
         self.instances.append(new)
 
     @classmethod
-    def find_by_search(self, project, search):
-        return self.objects(Q(message__icontains=search) | Q(type__icontains=search))
+    def find_by_search(self, project, search_keywords):
+        search_keywords = re.split("\s+", search_keywords)
+
+        qObjects = Q()
+        for keyword in search_keywords:
+            qObjects = qObjects | Q(message__icontains=keyword) | Q(type__icontains=keyword)
+
+        return self.objects(qObjects)
 
     def get_row_classes(self, user):
         classes = []
