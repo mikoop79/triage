@@ -37,6 +37,32 @@ class User(Document):
             )
 
 
+class Tag(Document):
+    tag = StringField(required=True)
+    count = IntField(required=True)
+    created = IntField(required=True)
+
+    @classmethod
+    def create(cls, value):
+        try:
+            tag = cls.objects.get(tag=value)
+            tag.update()
+        except DoesNotExist:
+            tag = cls.create_from_tag(value)
+        return tag
+
+    @classmethod
+    def create_from_tag(cls, value):
+        tag = cls()
+        tag.tag = value
+        tag.count = 1
+        tag.created = int(time())
+        return tag
+
+    def update(self):
+        self.count = self.count + 1
+
+
 class Comment(EmbeddedDocument):
     author = ReferenceField(User, required=True)
     content = StringField(required=True)

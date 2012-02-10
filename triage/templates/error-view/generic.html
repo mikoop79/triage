@@ -16,7 +16,7 @@
 	<div class="related-tags">
 		{% if error.tags %}
 			{% for tag in error.tags %}
-				<a href="{{route_url('tag_view', project=selected_project.id, tag=tag)}}"><span class="label {{tag.lower()}}">{{tag}}</span></a>
+				<span class="label">{{tag}}</span>
 			{% endfor %}
 		{% endif %}
 
@@ -104,7 +104,7 @@
 			{% if instance.context %}
 				{% for key in instance.context %}
 					<dt>{{key}}</dt>
-					<dd>{{ instance.context[key] }}</dd>				
+					<dd>{{ instance.context[key] }}</dd>
 				{% endfor %}
 			{% endif %}
 		</dl>

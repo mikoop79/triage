@@ -3,8 +3,10 @@ from pyramid.renderers import render_to_response
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from jinja2 import Markup
 
+from mongoengine.queryset import DoesNotExist
+
 from triage.util import Paginator
-from triage.models import Error, Comment
+from triage.models import Error, Comment, Tag
 from triage.forms import CommentsSchema, TagSchema
 from deform import Form, ValidationFailure
 from time import time
@@ -89,8 +91,14 @@ def view(request):
 
                 # build a list of comma seperated, non empty tags
                 tags = [t.strip() for t in values['tag'].split(',') if t.strip() != '']
-                error.tags.extend(tags)
-                error.save()
+
+                for tag in tags:
+                    if tag not in error.tags:
+                        error.tags.append(tag)
+                        error.save()
+
+                        tag = Tag.create(tag)
+                        tag.save()
 
                 url = request.route_url('error_view', project=selected_project['id'], id=error_id)
                 return HTTPFound(location=url)
