@@ -28,3 +28,4 @@ logs
 .project
 .settings/
 *.sublime-*
+log/
