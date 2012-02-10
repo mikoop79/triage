@@ -21,9 +21,10 @@ def list(request):
     except:
         errors = []
 
-    tag = request.params.get('tag', False)
-    if tag != False and errors.count():
-        errors.filter(tags=tag)
+    tags = request.GET.getall('tags')
+
+    if tags:
+        errors.filter(tags__in=tags)
 
     order_by = request.params.get('order', False)
     direction = request.params.get('direction', False)
