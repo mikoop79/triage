@@ -15,10 +15,17 @@ def list(request):
     available_projects = request.registry.settings['projects']
     selected_project = get_selected_project(request)
 
+    search = request.params.get('search', None)
+
+    if search:
+        errors = Error.find_by_search(selected_project, search)
+    else:
+        errors = Error.objects
+
     show = request.params.get('show', 'all')
     tags = request.GET.getall('tags')
 
-    errors = Error.objects.find_for_list(selected_project, request.user, show)
+    errors = errors.find_for_list(selected_project, request.user, show)
 
     if tags:
         errors.filter(tags__in=tags)

@@ -164,6 +164,10 @@ class Error(Document):
         self.hidden = False
         self.instances.append(new)
 
+    @classmethod
+    def find_by_search(self, project, search):
+        return self.objects(Q(message__icontains=search) | Q(type__icontains=search))
+
     def get_row_classes(self, user):
         classes = []
         not (self.seen) and classes.append('unseen')
