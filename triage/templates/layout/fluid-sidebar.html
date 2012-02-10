@@ -10,11 +10,21 @@
 			{% block sidebar %}
 				<h5>Tags</h5>
 				<ul class="tag-list">
-					<li class="{{ has_param({'tags': 'Default'}) }}"><a href="{{ set_params({'tags': 'Default'}, toggle=True) }}">Default</a></li>
-					<li class="{{ has_param({'tags': 'New'}) }}"><a href="{{ set_params({'tags': 'New'}, toggle=True)}}">New</a></li>
-					<li class="{{ has_param({'tags': 'Warning'}) }}"><a href="{{ set_params({'tags': 'Warning'}, toggle=True) }}">Warning</a></li>
-					<li class="{{ has_param({'tags': 'Important'}) }}"><a href="{{ set_params({'tags': 'Important'}, toggle=True) }}">Important</a></li>
-					<li class="{{ has_param({'tags': 'Notice'}) }}"><a href="{{ set_params({'tags': 'Notice'}, toggle=True) }}">Notice</a></li>
+					<li class="{{ switch(has_param(tags='Default')) }}">
+						<a href="{{ toggle_param(tags='Default') }}">Default</a>
+					</li>
+					<li class="{{ switch(has_param(tags='New')) }}">
+						<a href="{{ toggle_param(tags='New') }}">New</a>
+					</li>
+					<li class="{{ switch(has_param(tags='Warning')) }}">
+						<a href="{{ toggle_param(tags='Warning') }}">Warning</a>
+					</li>
+					<li class="{{ switch(has_param(tags='Important')) }}">
+						<a href="{{ toggle_param(tags='Important') }}">Important</a>
+					</li>
+					<li class="{{ switch(has_param(tags='Notice')) }}">
+						<a href="{{ toggle_param(tags='Notice') }}">Notice</a>
+					</li>
 				</ul>
 			{% endblock %}
 

@@ -3,7 +3,7 @@ from pyramid.security import authenticated_userid
 from pyramid.events import BeforeRender, ContextFound, subscriber
 from triage.models import User
 from urllib import urlencode
-
+from webob.multidict import MultiDict
 
 # Adds route_url method to the top level of the template context
 @subscriber(BeforeRender)
@@ -34,11 +34,34 @@ def add_user_to_request(event):
 
 # Adds an append_param method to template context to insert values into url GET parameters
 @subscriber(BeforeRender)
+def add_toggle_params(event):
+    request = event.get('request') or threadlocal.get_current_request()
+
+    def test(**kwargs):
+        key = kwargs.keys()[0]
+        value = kwargs.values()[0]
+        params = request.GET.copy()
+
+        if value in params.getall(key):
+            vals = list(params.getall(key))
+            del params[key]
+            for v in vals:
+                if value != v:
+                    params.add(key, v)
+        else:
+            params.add(key, value)
+
+        return request.current_route_url() + "?" + urlencode(params)
+    event['toggle_param'] = test
+
+
+# Adds an append_param method to template context to insert values into url GET parameters
+@subscriber(BeforeRender)
 def add_set_params(event):
     request = event.get('request') or threadlocal.get_current_request()
 
-    def test(params, toggle=False):
-        params = params or {}
+    def test(params, toggle=False, multi=False):
+        params = MultiDict(params or {})
 
         for k in request.GET:
             if k not in params:
@@ -52,17 +75,24 @@ def add_set_params(event):
         return request.current_route_url() + "?" + urlencode(params)
     event['set_params'] = test
 
+@subscriber(BeforeRender)
+def add_switch(event):
+    request = event.get('request') or threadlocal.get_current_request()
+
+    def test(condition, true='active', false='inactive'):
+        if condition:
+            return true
+        return false
+
+    event['switch'] = test
 
 @subscriber(BeforeRender)
 def add_has_param(event):
     request = event.get('request') or threadlocal.get_current_request()
 
-    def test(params):
-        value = 'inactive'
-        params = params or {}
-        for k in request.GET:
-            if k in params and params[k] == request.GET[k]:
-                value = 'active'
-        return value
+    def test(**kwargs):
+        key = kwargs.keys()[0]
+        value = kwargs.values()[0]
+        return value in request.GET.getall(key)
 
     event['has_param'] = test
