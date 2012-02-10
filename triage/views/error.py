@@ -15,7 +15,7 @@ def list(request):
     available_projects = request.registry.settings['projects']
     selected_project = get_selected_project(request)
 
-    search = request.params.get('search', None)
+    search = request.params.get('search', '')
 
     if search:
         errors = Error.find_by_search(selected_project, search)
@@ -43,6 +43,7 @@ def list(request):
     paginator = Paginator(errors, size_per_page=20, current_page=page)
 
     params = {
+        'search': search,
         'errors': paginator.get_current_page(),
         'paginator': paginator,
         'selected_project': selected_project,

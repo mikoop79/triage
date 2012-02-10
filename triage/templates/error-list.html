@@ -2,8 +2,8 @@
 
 {% block sidebar %}
 
-	<form action="{{ set_params({}) }}" method="GET">
-		<input type="text" name="search" placeholder="Search">
+	<form action="{{route_url('error_list', project=selected_project.id)}}" method="GET">
+		<input type="text" name="search" placeholder="Search" value="{{ search }}">
 	</form>
 
 	{{ super() }}
