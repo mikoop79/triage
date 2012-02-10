@@ -3,8 +3,6 @@ from pyramid.renderers import render_to_response
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from jinja2 import Markup
 
-from mongoengine.queryset import DoesNotExist
-
 from triage.util import Paginator
 from triage.models import Error, Comment, Tag
 from triage.forms import CommentsSchema, TagSchema
