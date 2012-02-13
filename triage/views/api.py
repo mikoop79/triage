@@ -7,7 +7,7 @@ from triage.models import Error
 def log(request):
     available_projects = request.registry.settings['projects']
 
-    get_params = dict(request.str_GET)
+    get_params = dict(request.GET)
     try:
         msg = json.loads(base64.b64decode(get_params['data']))
         msg = _format_backtrace(msg)
