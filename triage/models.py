@@ -99,17 +99,13 @@ class ErrorQuerySet(QuerySet):
     def find_for_list(self, project, user, show):
         selected_project = project['id']
         if show == 'all':
-            return self.filter(project=selected_project, hidden__ne=True)
+            return self.filter(project=selected_project, hiddenby__exists=False)
         elif show == 'hidden':
-            return self.filter(project=selected_project, hidden=True)
-        elif show == 'seen':
-            return self.filter(project=selected_project, seen=True, hidden__ne=True)
-        elif show == 'unseen':
-            return self.filter(project=selected_project, seen__ne=True, hidden__ne=True)
+            return self.filter(project=selected_project, hiddenby__exists=True)
         elif show == 'mine':
-            return self.filter(project=selected_project, claimedby=user, hidden__ne=True)
+            return self.filter(project=selected_project, claimedby=user, hiddenby__exists=False)
         elif show == 'unclaimed':
-            return self.filter(project=selected_project, claimedby__exists=False, hidden__ne=True)
+            return self.filter(project=selected_project, claimedby__exists=False, hiddenby__exists=False)
 
 
 class Error(Document):
@@ -130,8 +126,8 @@ class Error(Document):
     tags = ListField(StringField(max_length=30))
     comments = ListField(EmbeddedDocumentField(Comment))
     instances = ListField(EmbeddedDocumentField(ErrorInstance))
-    seen = BooleanField(default=False)
-    hidden = BooleanField(default=False)
+    seenby = ListField(ReferenceField(User))
+    hiddenby = ReferenceField(User)
 
     @classmethod
     def create_from_msg(cls, msg):
@@ -161,7 +157,7 @@ class Error(Document):
         self.message = new.message
         self.timelatest = new.timecreated
         self.count = self.count + 1
-        self.hidden = False
+        self.hiddenby = None
         self.instances.append(new)
 
     @classmethod
@@ -176,9 +172,9 @@ class Error(Document):
 
     def get_row_classes(self, user):
         classes = []
-        not (self.seen) and classes.append('unseen')
-        self.seen and classes.append('seen')
-        self.hidden and classes.append('hidden')
+        user not in self.seenby and classes.append('unseen')
+        user in self.seenby and classes.append('seen')
+        self.hiddenby and classes.append('hidden')
         self.claimedby == user and classes.append('mine')
         return ' '.join(classes)
 

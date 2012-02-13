@@ -99,13 +99,16 @@ def view(request):
                 # build a list of comma seperated, non empty tags
                 tags = [t.strip() for t in values['tag'].split(',') if t.strip() != '']
 
+                changed = False
                 for tag in tags:
                     if tag not in error.tags:
                         error.tags.append(tag)
-                        error.save()
-
+                        changed = True
                         tag = Tag.create(tag)
                         tag.save()
+
+                if changed:
+                    error.save()
 
                 url = request.route_url('error_view', project=selected_project['id'], id=error_id)
                 return HTTPFound(location=url)
@@ -115,8 +118,9 @@ def view(request):
         comment_form_render = comment_form.render()
         tag_form_render = tag_form.render()
 
-    error.seen = True
-    error.save()
+    if request.user not in error.seenby:
+        error.seenby.append(request.user)
+        error.save()
 
     params = {
         'error': error,
@@ -159,10 +163,10 @@ def toggle_hide(request):
 
     try:
         error = Error.objects(project=selected_project['id']).with_id(error_id)
-        error.hidden = not error.hidden
+        error.hiddenby = None if error.hiddenby else request.user
         error.save()
 
-        url = request.route_url('error_list', project=selected_project['id'])
+        url = request.route_url('error_view', project=selected_project['id'], id=error_id)
         return HTTPFound(location=url)
     except:
         return HTTPNotFound()
