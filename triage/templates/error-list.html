@@ -45,7 +45,6 @@
 				<th class="{{ switch(has_param(order='count')) }}"><a href="{{ set_params({'order': 'count', 'direction': 'asc'}) }}">#</a></th>
 				<th class="{{ switch(has_param(order='message')) }}"><a href="{{ set_params({'order': 'message', 'direction': 'asc'}) }}">Latest Message</a></th>
 				<th class="{{ switch(has_param(order='type')) }}"><a href="{{ set_params({'order': 'type', 'direction': 'asc'}) }}">Type</a></th>
-				<th class="{{ switch(has_param(order='timefirst')) }}"><a href="{{ set_params({'order': 'timefirst', 'direction': 'asc'}) }}">First seen</a></th>
 				<th class="{{ switch(has_param(order='timelatest')) }}"><a href="{{ set_params({'order': 'timelatest', 'direction': 'asc'}) }}">Last seen</a></th>
 				<th class="{{ switch(has_param(order='tags')) }}"><a href="{{ set_params({'order': 'tags', 'direction': 'asc'}) }}">Tags</a></th>
 				<th class="{{ switch(has_param(order='claimedby')) }}"><a href="{{ set_params({'order': 'claimedby', 'direction': 'asc'}) }}">Claimed By</a></th>
@@ -67,12 +66,7 @@
 						</a>
 					</td>
 					<td>{{ error.type }}</td>
-					<td>
-						<span data-timeago="{{ error.timefirst }}"></span>
-					</td>
-					<td>
-						<span data-timeago="{{ error.timelatest }}"></span>
-					</td>
+					<td title="First seen: {{ date(error.timefirst) }}">{{ date(error.timelatest) }}</td>
 					<td>
 						{% if error.tags %}
 							{% for tag in error.tags %}

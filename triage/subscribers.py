@@ -4,7 +4,7 @@ from pyramid.events import BeforeRender, ContextFound, subscriber
 from triage.models import User
 from urllib import urlencode
 from webob.multidict import MultiDict
-
+from datetime import datetime, timedelta
 
 # Adds route_url method to the top level of the template context
 @subscriber(BeforeRender)
@@ -75,6 +75,22 @@ def add_set_params(event):
 
         return request.current_route_url() + "?" + urlencode(params)
     event['set_params'] = test
+
+
+@subscriber(BeforeRender)
+def add_date(event):
+    def test(timestamp, format_today='%I:%M %p', format_other='%d %b %y'):
+
+        today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+        tomorrow = today + timedelta(days=1)
+        date = datetime.fromtimestamp(timestamp)
+        
+        if date >= today and date < tomorrow:
+            return date.strftime(format_today)
+        
+        return date.strftime(format_other)
+
+    event['date'] = test
 
 
 @subscriber(BeforeRender)

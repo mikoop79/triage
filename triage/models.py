@@ -46,7 +46,7 @@ class Tag(Document):
     def create(cls, value):
         try:
             tag = cls.objects.get(tag=value)
-            tag.update()
+            tag.count = tag.count + 1
         except DoesNotExist:
             tag = cls.create_from_tag(value)
         return tag
@@ -58,9 +58,6 @@ class Tag(Document):
         tag.count = 1
         tag.created = int(time())
         return tag
-
-    def update(self):
-        self.count = self.count + 1
 
 
 class Comment(EmbeddedDocument):

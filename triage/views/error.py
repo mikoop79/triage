@@ -104,8 +104,7 @@ def view(request):
                     if tag not in error.tags:
                         error.tags.append(tag)
                         changed = True
-                        tag = Tag.create(tag)
-                        tag.save()
+                        Tag.create(tag).save()
 
                 if changed:
                     error.save()
