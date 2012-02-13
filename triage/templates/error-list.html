@@ -45,9 +45,8 @@
 				<th class="{{ switch(has_param(order='count')) }}"><a href="{{ set_params({'order': 'count', 'direction': 'asc'}) }}">#</a></th>
 				<th class="{{ switch(has_param(order='message')) }}"><a href="{{ set_params({'order': 'message', 'direction': 'asc'}) }}">Latest Message</a></th>
 				<th class="{{ switch(has_param(order='type')) }}"><a href="{{ set_params({'order': 'type', 'direction': 'asc'}) }}">Type</a></th>
-				<th class="{{ switch(has_param(order='timelatest')) }}"><a href="{{ set_params({'order': 'timelatest', 'direction': 'asc'}) }}">Last seen</a></th>
 				<th class="{{ switch(has_param(order='tags')) }}"><a href="{{ set_params({'order': 'tags', 'direction': 'asc'}) }}">Tags</a></th>
-				<th class="{{ switch(has_param(order='claimedby')) }}"><a href="{{ set_params({'order': 'claimedby', 'direction': 'asc'}) }}">Claimed By</a></th>
+				<th class="{{ switch(has_param(order='timelatest')) }}"><a href="{{ set_params({'order': 'timelatest', 'direction': 'asc'}) }}">Last seen</a></th>
 			</tr>
 		</thead>
 
@@ -55,30 +54,28 @@
 			{% for error in errors %}
 				<tr class="{{error.get_row_classes(user)}}">
 					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
-					<td>{{ error.count|int }}</td>
+					<td>
+						{{ error.count|int }}
+						{% if error.claimedby %}
+							<span title="Claimed by {{ error.claimedby.name }}">&hearts;</span>
+						{% endif %}			
+					</td>
 					<td>
 						<a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">
 							{% if error.message %}
-								{{ error.message|truncate(length=130) }}
+								{{ error.message|truncate(length=100) }}
 							{% else %}
 								An unknown error has occurred
 							{% endif %}
 						</a>
 					</td>
 					<td>{{ error.type }}</td>
+					<td>
+						{% for tag in error.tags %}
+							<a class="label" href="{{ toggle_param(tags=tag) }}">{{ tag }}</a>
+						{% endfor %}
+					</td>
 					<td title="First seen: {{ date(error.timefirst) }}">{{ date(error.timelatest) }}</td>
-					<td>
-						{% if error.tags %}
-							{% for tag in error.tags %}
-								<a class="label" href="{{ toggle_param(tags=tag) }}">{{ tag }}</a>
-							{% endfor %}
-						{% endif %}
-					</td>
-					<td>
-						{% if error.claimedby %}
-							{{ error.claimedby.name }}
-						{% endif %}
-					</td>
 				</tr>
 			{% endfor %}
 		</tbody>
