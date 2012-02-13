@@ -48,6 +48,7 @@
 				<th class="{{ switch(has_param(order='timefirst')) }}"><a href="{{ set_params({'order': 'timefirst', 'direction': 'asc'}) }}">First seen</a></th>
 				<th class="{{ switch(has_param(order='timelatest')) }}"><a href="{{ set_params({'order': 'timelatest', 'direction': 'asc'}) }}">Last seen</a></th>
 				<th class="{{ switch(has_param(order='tags')) }}"><a href="{{ set_params({'order': 'tags', 'direction': 'asc'}) }}">Tags</a></th>
+				<th class="{{ switch(has_param(order='claimedby')) }}"><a href="{{ set_params({'order': 'claimedby', 'direction': 'asc'}) }}">Claimed By</a></th>
 			</tr>
 		</thead>
 
@@ -77,6 +78,11 @@
 							{% for tag in error.tags %}
 								<a class="label" href="{{ toggle_param(tags=tag) }}">{{ tag }}</a>
 							{% endfor %}
+						{% endif %}
+					</td>
+					<td>
+						{% if error.claimedby %}
+							{{ error.claimedby.name }}
 						{% endif %}
 					</td>
 				</tr>
