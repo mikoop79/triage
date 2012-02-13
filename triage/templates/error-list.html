@@ -2,11 +2,20 @@
 
 {% block sidebar %}
 
-	<form action="{{route_url('error_list', project=selected_project.id)}}" method="POST">
+	<form action="{{ set_params({}) }}" method="get">
 		<input type="text" name="search" placeholder="Search" value="{{ search }}">
 	</form>
 
-	{{ super() }}
+	{% if tags %}
+		<h5>Tags</h5>
+		<ul class="tag-list">
+			{% for tag in tags %}
+				<li class="{{ switch(has_param(tags=tag.tag)) }}">
+					<a href="{{ toggle_param(tags=tag.tag) }}">{{ tag.tag }}</a>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
 
 {% endblock %}
 

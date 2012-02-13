@@ -38,6 +38,10 @@ class User(Document):
 
 
 class Tag(Document):
+    meta = {
+        'ordering' : ['-count']
+    }
+
     tag = StringField(required=True)
     count = IntField(required=True)
     created = IntField(required=True)
@@ -93,6 +97,16 @@ class ErrorInstance(EmbeddedDocument):
 
 
 class ErrorQuerySet(QuerySet):
+
+    def search(self, search_keywords):
+        search_keywords = re.split("\s+", search_keywords)
+
+        qObjects = Q()
+        for keyword in search_keywords:
+            qObjects = qObjects | Q(message__icontains=keyword) | Q(type__icontains=keyword)
+
+        return self.filter(qObjects)
+
     def find_for_list(self, project, user, show):
         selected_project = project['id']
         if show == 'all':
@@ -156,16 +170,6 @@ class Error(Document):
         self.count = self.count + 1
         self.hiddenby = None
         self.instances.append(new)
-
-    @classmethod
-    def find_by_search(self, project, search_keywords):
-        search_keywords = re.split("\s+", search_keywords)
-
-        qObjects = Q()
-        for keyword in search_keywords:
-            qObjects = qObjects | Q(message__icontains=keyword) | Q(type__icontains=keyword)
-
-        return self.objects(qObjects)
 
     def get_row_classes(self, user):
         classes = []

@@ -16,24 +16,19 @@ def list(request):
     selected_project = get_selected_project(request)
 
     search = request.params.get('search', '')
-
-    if search:
-        errors = Error.find_by_search(selected_project, search)
-    else:
-        errors = Error.objects
-
     show = request.params.get('show', 'all')
     tags = request.GET.getall('tags')
+    order_by = request.params.get('order', False)
+    direction = request.params.get('direction', False)
 
-    errors = errors.find_for_list(selected_project, request.user, show)
+    errors = Error.objects.find_for_list(selected_project, request.user, show)
+
+    if search:
+        errors = errors.search(search)
 
     if tags:
         errors.filter(tags__in=tags)
-
-    tags = Tag.objects().order_by('-count')
-
-    order_by = request.params.get('order', False)
-    direction = request.params.get('direction', False)
+ 
     if order_by != False and errors.count():
         if direction and direction == 'desc':
             order_by = '-' + order_by
@@ -49,7 +44,7 @@ def list(request):
         'selected_project': selected_project,
         'available_projects': available_projects,
         'show': show,
-        'tags': tags,
+        'tags': Tag.objects(),
         'get_error_count': lambda x: Error.objects.find_for_list(selected_project, request.user, x).count()
     }
 
