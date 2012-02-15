@@ -2,6 +2,7 @@
 
 {% block sidebar %}
 
+	<h5>Search</h5>
 	<form action="{{ set_params({}) }}" method="get">
 		<input type="text" name="search" placeholder="Search" value="{{ search }}">
 	</form>
@@ -17,27 +18,32 @@
 		</ul>
 	{% endif %}
 
+	{% if users %}
+		<h5>Users</h5>
+		<ul class="tag-list">
+			{% for user in users %}
+				<li class="{{ switch(has_param(users=user.id)) }}">
+					<a href="{{ toggle_param(users=user.id) }}">{{ user.name }}</a>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+
+	<h5>Show</h5>
+	<ul class="tag-list">
+		<li class="{{ switch(has_param(show='unclaimed')) }}">
+			<a href="{{ toggle_param(show='unclaimed') }}">Unclaimed</a>
+		</li>
+		<li class="{{ switch(has_param(show='hidden')) }}">
+			<a href="{{ toggle_param(show='hidden') }}">Hidden</a>
+		</li>
+	</ul>
+
 {% endblock %}
 
 
 {% block navigation %}
 
-	<div id="navigation" class="cf">
-		<ul class="pills">
-			<li class="{{ switch(has_param(show='all')) }}">
-				<a href="{{ set_params({'show': 'all'}) }}">All ({{ get_error_count('all') }})</a>
-			</li>
-			<li class="{{ switch(has_param(show='mine')) }}">
-				<a href="{{ set_params({'show': 'mine'}) }}">Mine ({{ get_error_count('mine') }})</a>
-			</li>
-			<li class="{{ switch(has_param(show='unclaimed')) }}">
-				<a href="{{ set_params({'show': 'unclaimed'}) }}">Unclaimed ({{ get_error_count('unclaimed') }})</a>
-			</li>
-			<li class="{{ switch(has_param(show='hidden')) }}">
-				<a href="{{ set_params({'show': 'hidden'}) }}">Hidden ({{ get_error_count('hidden') }})</a>
-			</li>
-		</ul>
-	</div>
 
 {% endblock %}
 
@@ -46,7 +52,7 @@
 
 <div id="information">
 
-	<table class="bordered-table zebra-striped">
+	<table class="table table-bordered table-striped">
 
 		<thead>
 			<tr>
@@ -65,9 +71,6 @@
 					<!-- <td class="center"><input type="checkbox" name="error[]"></td> -->
 					<td>
 						{{ error.count|int }}
-						{% if error.claimedby %}
-							<span title="Claimed by {{ error.claimedby.name }}">&hearts;</span>
-						{% endif %}			
 					</td>
 					<td>
 						<a href="{{route_url('error_view', project=selected_project.id, id=error._id)}}" title="error.value.message">
@@ -80,9 +83,15 @@
 					</td>
 					<td>{{ error.type }}</td>
 					<td>
-						{% for tag in error.tags %}
-							<a class="label" href="{{ toggle_param(tags=tag) }}">{{ tag }}</a>
-						{% endfor %}
+						{% if error.claimedby %}
+							<i class="icon-heart tooltip-toggle" data-original-title="Claimed by {{ error.claimedby.name }}"></i>
+						{% endif %}
+						{% if error.comments %}
+							<i class="icon-comment tooltip-toggle" data-original-title="{{ error.comments.__len__() }} comments"></i>
+						{% endif %}
+						{% if error.tags %}
+							<i class="icon-tags tooltip-toggle" data-original-title="{% for tag in error.tags %}{{ tag }} {% endfor %}"></i>
+						{% endif %}
 					</td>
 					<td title="First seen: {{ date(error.timefirst) }}">{{ date(error.timelatest) }}</td>
 				</tr>

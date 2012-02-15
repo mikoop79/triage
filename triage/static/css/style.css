@@ -42,6 +42,7 @@ body {
 
 .container-fluid > .sidebar {
 	right: 20px;
+	float: right;
 	left: inherit;
 }
 

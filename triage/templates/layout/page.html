@@ -4,8 +4,8 @@
 
 	{% block topbar %}
 
-		<header class="topbar">
-			<div class="fill">
+		<header class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
 				<div class="container">
 
 					<a href="{{route_url('index')}}" class="brand">Triage</a>
@@ -15,8 +15,8 @@
 
 						{% if available_projects %}
 
-							<li data-dropdown="dropdown" class="dropdown pull-right">
-								<a class="dropdown-toggle" href="">{{ selected_project.name }}</a>
+							<li id="project-menu" class="dropdown pull-right">
+								<a class="dropdown-toggle" href="#project-menu">{{ selected_project.name }}</a>
 								<ul class="dropdown-menu">
 									{% for p in available_projects.itervalues() %}
 										<li {% if p.id == selected_project.id %}class="active"{% endif %}>

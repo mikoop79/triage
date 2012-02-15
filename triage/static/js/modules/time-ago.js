@@ -38,4 +38,4 @@ Triage.modules.timeAgo = (function($, app) {
 	};
 });
 
-Triage.modules.timeAgo.autoRegister = true;
+Triage.modules.timeAgo.autoRegister = false;

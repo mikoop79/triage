@@ -29,3 +29,5 @@ logs
 .settings/
 *.sublime-*
 log/
+app
+pid/

@@ -4,7 +4,7 @@ from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from jinja2 import Markup
 
 from triage.util import Paginator
-from triage.models import Error, Comment, Tag
+from triage.models import Error, Comment, Tag, User
 from triage.forms import CommentsSchema, TagSchema
 from deform import Form, ValidationFailure
 from time import time
@@ -16,8 +16,9 @@ def list(request):
     selected_project = get_selected_project(request)
 
     search = request.params.get('search', '')
-    show = request.params.get('show', 'all')
+    show = request.GET.getall('show')
     tags = request.GET.getall('tags')
+    users = request.GET.getall('users')
     order_by = request.params.get('order', False)
     direction = request.params.get('direction', False)
 
@@ -28,6 +29,9 @@ def list(request):
 
     if tags:
         errors.filter(tags__in=tags)
+
+    if users:
+        errors.filter(claimedby__in=users)
  
     if order_by != False and errors.count():
         if direction and direction == 'desc':
@@ -45,6 +49,7 @@ def list(request):
         'available_projects': available_projects,
         'show': show,
         'tags': Tag.objects(),
+        'users': User.objects(),
         'get_error_count': lambda x: Error.objects.find_for_list(selected_project, request.user, x).count()
     }
 

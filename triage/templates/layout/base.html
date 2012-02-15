@@ -15,10 +15,10 @@
 
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 
-		<link rel="stylesheet" href="/static/css/libs/development/bootstrap-1.4.0.css">
+		<link rel="stylesheet" href="/static/css/bootstrap.css">
 		<link rel="stylesheet" href="/static/css/style.css">
 
-		<script src="/static/js/libs/development/modernizr-2.0.6.js"></script>
+		<script src="/static/js/modernizr-2.0.6.js"></script>
 		{% endblock %}
 	</head>
 
@@ -27,15 +27,14 @@
 		{% block body %}{% endblock %}
 
 		{% block scripts %}
-		<script src="/static/js/libs/development/jquery-1.7.0.js"></script>
-		<script src="/static/js/libs/development/bootstrap-dropdown-1.4.0.js"></script>
-		<script src="/static/js/libs/development/jquery.tablesorter-2.0.5b.js"></script>
+		<script src="/static/js/jquery-1.7.0.js"></script>
+		<script src="/static/js/bootstrap.js"></script>
 
 		<!-- scripts concatenated and minified via ant build script-->
 		<script src="/static/js/application.js"></script>
 		<script src="/static/js/triage.js"></script>
 		<script src="/static/js/modules/time-ago.js"></script>
-		<script src="/static/js/modules/table-sorter.js"></script>
+		<script src="/static/js/modules/dropdown.js"></script>
 		<script type="text/javascript">
 
 			var Triage = Triage || {};

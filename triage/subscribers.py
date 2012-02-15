@@ -40,7 +40,7 @@ def add_toggle_params(event):
 
     def test(**kwargs):
         key = kwargs.keys()[0]
-        value = kwargs.values()[0]
+        value = str(kwargs.values()[0])
         params = request.GET.copy()
 
         if value in params.getall(key):
@@ -109,7 +109,7 @@ def add_has_param(event):
 
     def test(**kwargs):
         key = kwargs.keys()[0]
-        value = kwargs.values()[0]
+        value = str(kwargs.values()[0])
         return value in request.GET.getall(key)
 
     event['has_param'] = test

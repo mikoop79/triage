@@ -19,4 +19,4 @@ Triage.modules.tableAccordion = (function($, app) {
 	};
 });
 
-Triage.modules.tableAccordion.autoRegister = true;
+Triage.modules.tableAccordion.autoRegister = false;

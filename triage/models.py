@@ -109,14 +109,14 @@ class ErrorQuerySet(QuerySet):
 
     def find_for_list(self, project, user, show):
         selected_project = project['id']
-        if show == 'all':
-            return self.filter(project=selected_project, hiddenby__exists=False)
-        elif show == 'hidden':
-            return self.filter(project=selected_project, hiddenby__exists=True)
-        elif show == 'mine':
-            return self.filter(project=selected_project, claimedby=user, hiddenby__exists=False)
-        elif show == 'unclaimed':
-            return self.filter(project=selected_project, claimedby__exists=False, hiddenby__exists=False)
+        self.filter(project=selected_project)
+        if 'hidden' in show:
+            self.filter( hiddenby__exists=True)
+        else:
+            self.filter( hiddenby__exists=False)
+        if 'unclaimed' in show:
+            self.filter(claimedby__exists=False)
+        return self
 
 
 class Error(Document):
